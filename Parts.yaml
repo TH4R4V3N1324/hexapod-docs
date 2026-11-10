@@ -1,0 +1,596 @@
+# ---------------------------------------------------------------------------
+# Hexapod V6.1 parts (from Hexapod_V6.1_Shopping_List.xlsx)
+# ---------------------------------------------------------------------------
+
+# --- Servos & control ---
+
+ST3215_Servo:
+    Name: ST3215 serial bus servo
+    Description: >
+        12 V, 30 kg·cm serial bus servo. Three per leg (18 in total), plus
+        optional spares. Each servo comes with one 3-pin cable and horn screws.
+    Specs:
+        Model: ST3215
+        Voltage: 12 V
+        Torque: 30 kg·cm
+        Interface: Serial bus
+    Suppliers:
+        DFRobot:
+            PartNo: 'ST3215'
+            Link: https://www.dfrobot.com/product-2962.html
+
+BusServoAdapterA:
+    Name: Waveshare Bus Servo Adapter (A)
+    Description: >
+        USB/UART to serial servo bus adapter. Mounts on the Pi shelf.
+    Specs:
+        Manufacturer: Waveshare
+        Interface: USB / UART to servo bus
+    Suppliers:
+        The Pi Hut:
+            PartNo: 'Bus Servo Adapter (A)'
+            Link: https://thepihut.com/products/serial-bus-servo-driver-board
+
+# --- Compute & sensors ---
+
+RaspberryPi5_16GB:
+    Name: Raspberry Pi 5 (16 GB)
+    Description: >
+        Main computer for the hexapod.
+    Specs:
+        Model: Raspberry Pi 5
+        RAM: 16 GB
+    Suppliers:
+        The Pi Hut:
+            PartNo: 'Raspberry Pi 5 16GB'
+            Link: https://thepihut.com/collections/raspberry-pi
+
+Pi5ActiveCooler:
+    Name: Raspberry Pi 5 Active Cooler
+    Description: >
+        Official Raspberry Pi 5 Active Cooler.
+    Specs:
+        Manufacturer: Raspberry Pi (official)
+    Suppliers:
+        The Pi Hut:
+            PartNo: 'Active Cooler'
+            Link: https://thepihut.com/products/active-cooler-for-raspberry-pi-5
+
+MicroSD_128GB:
+    Name: microSD card 128 GB A2
+    Description: >
+        128 GB A2-rated microSD card for the Raspberry Pi OS.
+    Specs:
+        Capacity: 128 GB
+        Speed class: A2
+    Suppliers:
+        The Pi Hut:
+            PartNo: '128GB A2 microSD'
+            Link: https://thepihut.com/products/noobs-preinstalled-sd-card?variant=53607266091393
+
+PiCameraModule3:
+    Name: Raspberry Pi Camera Module 3
+    Description: >
+        Main camera. Available in Standard or Wide versions.
+    Specs:
+        Variant: Standard or Wide
+    Suppliers:
+        The Pi Hut:
+            PartNo: 'Camera Module 3'
+            Link: https://thepihut.com/products/raspberry-pi-camera-module-3
+
+ArducamToF:
+    Name: Arducam Time of Flight camera
+    Description: >
+        Time of Flight depth camera for Raspberry Pi.
+    Specs:
+        Manufacturer: Arducam
+        Model: B0410
+    Suppliers:
+        The Pi Hut:
+            PartNo: B0410
+            Link: https://thepihut.com/products/time-of-flight-camera-for-raspberry-pi
+
+Pi5CameraCable_300mm:
+    Name: Pi 5 camera cable, 22-pin to 15-pin, 300 mm
+    Description: >
+        Camera adapter cable for the Raspberry Pi 5. One per camera; the cable
+        route is about 200 mm.
+    Specs:
+        Connectors: 22-pin to 15-pin
+        Length: 300 mm
+    Suppliers:
+        The Pi Hut:
+            PartNo: 'Pi 5 camera cable 300mm'
+            Link: https://thepihut.com/products/camera-adapter-cable-for-raspberry-pi-5?variant=42531560816835
+
+RPLIDAR_A2M12:
+    Name: Slamtec RPLIDAR A2M12
+    Description: >
+        360° 2D laser scanner (LIDAR).
+    Specs:
+        Manufacturer: Slamtec
+        Model: A2M12
+    Suppliers:
+        DFRobot:
+            PartNo: 'RPLIDAR A2M12'
+            Link: https://www.dfrobot.com/product-1461.html
+
+IMU_ISM330DHCX:
+    Name: Adafruit ISM330DHCX IMU breakout
+    Description: >
+        6-DoF accelerometer and gyroscope with STEMMA QT / Qwiic connectors,
+        as used in the V6.1 body model.
+    Specs:
+        Manufacturer: Adafruit
+        Chip: ISM330DHCX
+        Adafruit product ID: 4502
+        Connector: STEMMA QT / Qwiic
+    Suppliers:
+        Pimoroni:
+            PartNo: '4502'
+            Link: https://shop.pimoroni.com/products/adafruit-ism330dhcx-6-dof-imu-accelerometer-and-gyroscope-stemma-qt-qwiic?variant=31458572075091
+
+StemmaQTCable_100mm:
+    Name: STEMMA QT / Qwiic cable, 100 mm
+    Description: >
+        JST SH 4-pin cable. Used to daisy-chain the IMU and breakout board I²C.
+    Specs:
+        Connector: JST SH 4-pin
+        Length: 100 mm
+
+PiPowerLead_5V:
+    Name: 5 V power lead to Pi
+    Description: >
+        USB-C pigtail or GPIO lead running from the breakout board J2
+        (Micro-Fit) connector to the Raspberry Pi.
+    Specs:
+        Type: USB-C pigtail or GPIO lead
+        Voltage: 5 V
+
+# --- Power ---
+
+Cell_21700_P45B:
+    Name: Molicel P45B 21700 cell
+    Description: >
+        4500 mAh, 50 A high-power Li-ion cell. Three cells are used in a 3S1P
+        pack.
+    Specs:
+        Manufacturer: Molicel
+        Model: P45B
+        Format: '21700'
+        Capacity: 4500 mAh
+    Suppliers:
+        Unmanned Tech:
+            PartNo: 'Molicel P45B'
+            Link: https://www.unmannedtechshop.co.uk/products/molicel-p45b-21700-battery-the-4500mah-50a-high-power-overlord
+
+BMS_3S_40A:
+    Name: 3S BMS, 40 A
+    Description: >
+        Battery management system for the 3S pack. Fits the V6 battery holder.
+    Specs:
+        Configuration: 3S
+        Current: 40 A
+    Suppliers:
+        eBay:
+            PartNo: '800630005985'
+            Link: https://www.ebay.co.uk/itm/800630005985
+
+Charger_3S_12V6:
+    Name: 3S Li-ion charger, 12.6 V 2 A
+    Description: >
+        Charger with a 5.5×2.1 mm barrel plug. The plug body must be no more
+        than 10 mm in diameter to fit the charge port.
+    Specs:
+        Output: 12.6 V, 2 A
+        Plug: 5.5×2.1 mm barrel
+        Max plug body diameter: 10 mm
+
+MainPowerSwitch_20A:
+    Name: Main power switch (≥20 A)
+    Description: >
+        Main power switch. Only needed if the body has a switch mount.
+    Specs:
+        Current rating: ≥20 A
+
+EStop_NC_16mm:
+    Name: E-stop, NC, 16 mm
+    Description: >
+        Normally-closed emergency stop button. Only needed if the body has an
+        E-stop mount. Wires to the breakout board KILL connector.
+    Specs:
+        Contact: Normally closed (NC)
+        Mounting hole: 16 mm
+
+XT30U_PlugPair:
+    Name: Amass XT30U plug pair
+    Description: >
+        XT30U connectors for connecting the battery to the two breakout boards.
+        Sold in packs of 5 pairs.
+    Specs:
+        Manufacturer: Amass
+        Type: XT30U
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B07N1N2C94'
+            Link: https://www.amazon.co.uk/dp/B07N1N2C94
+
+SiliconeWire_16AWG:
+    Name: Silicone wire 16 AWG, red and black
+    Description: >
+        Battery harness wire. 2 m each of red and black.
+    Specs:
+        Gauge: 16 AWG
+        Insulation: Silicone
+        Colours: Red, black
+
+SiliconeWire_22AWG:
+    Name: Silicone wire 22 AWG kit
+    Description: >
+        Wire for signal and 5 V leads.
+    Specs:
+        Gauge: 22 AWG
+        Insulation: Silicone
+
+MiniBladeFuse_5A:
+    Name: 5 A mini blade fuse
+    Description: >
+        Three per breakout board, plus spares. Sold in packs of 10.
+    Specs:
+        Type: Mini blade
+        Rating: 5 A
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0BJPPC4Z8'
+            Link: https://www.amazon.co.uk/dp/B0BJPPC4Z8
+
+# --- PCBs ---
+
+HexapodBreakoutPCB:
+    Name: hexapod_breakout PCB (rev 0.3)
+    Description: >
+        Custom breakout PCB, fabricated and assembled by JLCPCB (order of 5
+        boards). Assumes JLCPCB fits the board connectors.
+    Specs:
+        Revision: '0.3'
+    Suppliers:
+        JLCPCB:
+            PartNo: 'hexapod_breakout rev 0.3 (fab + assembly)'
+            Link: https://jlcpcb.com/
+
+FuseHolder_Keystone3568:
+    Name: Keystone 3568 mini blade fuse holder
+    Description: >
+        PCB fuse holder for mini blade fuses. Three per breakout board. Only
+        needed if JLCPCB does not fit them.
+    Specs:
+        Manufacturer: Keystone Electronics
+        Part: 3568
+    Suppliers:
+        Mouser:
+            PartNo: 3568-10
+            Link: https://www.mouser.co.uk/ProductDetail/Keystone-Electronics/3568-10
+
+# --- Connectors & wiring ---
+
+MiniSPOX_Housing_3pin:
+    Name: Molex Mini-SPOX 3-pin housing
+    Description: >
+        Receptacle housing for the servo leg leads (3 leads × 2 ends × 6 legs =
+        36, plus bus leads and spares).
+    Specs:
+        Manufacturer: Molex
+        Series: Mini-SPOX (5264)
+        Positions: 3
+        Pitch: 2.5 mm
+    Suppliers:
+        Farnell:
+            PartNo: '9979557'
+            Link: https://uk.farnell.com/molex/50-37-5033/conn-housing-rcpt-3pos-2-5mm-natural/dp/9979557
+        Molex:
+            PartNo: 50-37-5033
+
+MiniSPOX_Header_3pin:
+    Name: Molex Mini-SPOX 3-pin header
+    Description: >
+        Through-hole PCB header that mates with the Mini-SPOX 3-pin housing.
+    Specs:
+        Manufacturer: Molex
+        Series: Mini-SPOX (5264)
+        Positions: 3
+        Pitch: 2.5 mm
+    Suppliers:
+        Farnell:
+            PartNo: '9979620'
+            Link: https://uk.farnell.com/molex/22-03-5035/conn-pin-hdr-3pos-1row-2-5mm-tht/dp/9979620
+        Molex:
+            PartNo: 22-03-5035
+
+MiniSPOX_Crimp:
+    Name: Molex Mini-SPOX crimp terminal
+    Description: >
+        Crimp terminal for Mini-SPOX housings. Three per housing, plus plenty
+        of spares for practice.
+    Specs:
+        Manufacturer: Molex
+        Series: Mini-SPOX (5263)
+    Suppliers:
+        Farnell:
+            PartNo: '1462522'
+            Link: https://uk.farnell.com/molex/08-70-1039/contact-socket-28-22awg-crimp/dp/1462522
+        Molex:
+            PartNo: 08-50-0114
+
+MicroFit_Header_2pin:
+    Name: Molex Micro-Fit 2-pin header
+    Description: >
+        Right-angle PCB header, 3 mm pitch.
+    Specs:
+        Manufacturer: Molex
+        Series: Micro-Fit 3.0
+        Positions: 2
+        Pitch: 3 mm
+    Suppliers:
+        Farnell:
+            PartNo: '2324861'
+            Link: https://uk.farnell.com/molex/43650-0200/conn-r-a-pcb-hdr-2pos-1row-3mm/dp/2324861
+        Molex:
+            PartNo: 43650-0200
+
+MicroFit_Housing_2pin:
+    Name: Molex Micro-Fit 2-pin housing
+    Description: >
+        Receptacle housing that mates with the breakout board J2 (5V_PI)
+        connector.
+    Specs:
+        Manufacturer: Molex
+        Series: Micro-Fit 3.0
+        Positions: 2
+        Pitch: 3 mm
+    Suppliers:
+        Farnell:
+            PartNo: '3076015'
+            Link: https://uk.farnell.com/molex/43645-0200/conn-housing-rcpt-2pos-3mm-black/dp/3076015
+        Molex:
+            PartNo: 43645-0200
+
+MicroFit_Crimp:
+    Name: Molex Micro-Fit crimp terminal
+    Description: >
+        Socket crimp terminal for Micro-Fit housings, 24–20 AWG.
+    Specs:
+        Manufacturer: Molex
+        Series: Micro-Fit 3.0
+        Wire: 24–20 AWG
+    Suppliers:
+        Farnell:
+            PartNo: '2101869'
+            Link: https://uk.farnell.com/molex/43030-0007/contact-socket-24-20awg-crimp/dp/2101869
+        Molex:
+            PartNo: 43030-0007
+
+JST_PH_Assortment:
+    Name: JST PH housings and crimps assortment
+    Description: >
+        2-pin and 5-pin JST PH housings and crimps, for the CTRL (5-pin) and
+        KILL (2-pin) leads.
+    Specs:
+        Series: JST PH
+        Positions: 2-pin and 5-pin
+
+CrimpTool_MiniSPOX_PH:
+    Name: Crimp tool for Mini-SPOX / JST PH
+    Description: >
+        Crimp tool suitable for Mini-SPOX and JST PH terminals, for example an
+        Engineer PA-09 or IWISS SN-2549.
+    Specs:
+        Example models: Engineer PA-09, IWISS SN-2549
+
+FlatSiliconeCable_3core_26AWG:
+    Name: 3-core flat silicone cable, 26 AWG
+    Description: >
+        Servo lead cable, sold by the metre. About 0.8 m per leg plus spare.
+    Specs:
+        Cores: 3
+        Gauge: 26 AWG
+        Insulation: Silicone
+
+HeatshrinkAssortment:
+    Name: Heatshrink assortment
+    Description: >
+        Assorted heatshrink tubing.
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B092VWZN4W'
+            Link: https://www.amazon.co.uk/dp/B092VWZN4W
+
+CableTies_SpiralWrap:
+    Name: Cable ties / spiral wrap
+    Description: >
+        For tidying the wiring.
+
+# --- Suspension ---
+
+Shocks_55mm_Touring:
+    Name: 55 mm 1/10 touring shocks (pair)
+    Description: >
+        1/10 scale 55 mm aluminium adjustable shocks, e.g. Fastrax FAST155.
+        One per leg. Check that the shock fits the tibia bore (standard shocks
+        are about 17 mm).
+    Specs:
+        Length: 55 mm
+        Scale: 1/10 touring
+        Example model: Fastrax FAST155
+    Suppliers:
+        Modelsport:
+            PartNo: 'FAST155'
+            Link: https://www.modelsport.co.uk/product/fastrax-1-10th-55mm-aluminium-adjustable-shocks-2-13689
+
+ShockSpring_2N5:
+    Name: Replacement shock spring, ~2.5 N/mm
+    Description: >
+        Compression spring to replace the stock shock spring. Inner diameter
+        and length should match the stock spring.
+    Specs:
+        Rate: ~2.5 N/mm
+        Size: ID and length to match stock spring
+    Suppliers:
+        Lee Spring UK:
+            PartNo: 'TBC (match stock spring)'
+            Link: https://www.leespring.co.uk/compression-springs
+
+ShockOil_500cSt:
+    Name: Silicone shock oil 500 cSt
+    Description: >
+        Mix with 1000 cSt oil for a starting viscosity of about 700 cSt.
+    Specs:
+        Viscosity: 500 cSt
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0FLVX29H6'
+            Link: https://www.amazon.co.uk/dp/B0FLVX29H6
+
+ShockOil_1000cSt:
+    Name: Silicone shock oil 1000 cSt
+    Description: >
+        Mix with 500 cSt oil for a starting viscosity of about 700 cSt.
+    Specs:
+        Viscosity: 1000 cSt
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0GTNCWV87'
+            Link: https://www.amazon.co.uk/dp/B0GTNCWV87
+
+LinearRod_4mm_500mm:
+    Name: 4 mm hardened chrome linear rod, 500 mm
+    Description: >
+        Cut into 12 rods of 65–66 mm. Check whether the listing is for 1 or 2
+        bars.
+    Specs:
+        Diameter: 4 mm
+        Length: 500 mm
+        Material: Hardened chrome steel
+        Brand: sourcing map
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0FR4XD5RB'
+            Link: https://www.amazon.co.uk/dp/B0FR4XD5RB
+
+LM4UU_Bearing:
+    Name: LM4UU linear bearing
+    Description: >
+        4 mm linear ball bearing. Four per leg (24 in total). Sold in packs of
+        12.
+    Specs:
+        Type: LM4UU
+        Bore: 4 mm
+        Brand: HiPicco
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0BR295RBN'
+            Link: https://www.amazon.co.uk/dp/B0BR295RBN
+
+RetainingCompound:
+    Name: Retaining compound (Loctite 638 or 603)
+    Description: >
+        Optional. Used to retain the rods in the shank.
+    Specs:
+        Example products: Loctite 638 or Loctite 603
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B07BP9JPC9'
+            Link: https://www.amazon.co.uk/dp/B07BP9JPC9
+
+# --- Fasteners ---
+
+M3HeatSetInsert:
+    Name: M3 heat-set insert
+    Description: >
+        Used in the clamshells, hip mounts and body. Sold in packs of 100.
+    Specs:
+        Thread: M3
+        Length: 5.7 mm
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0BVMK6DTK'
+            Link: https://www.amazon.co.uk/dp/B0BVMK6DTK
+
+M3SocketCapAssortment:
+    Name: M3 socket cap screw assortment
+    Description: >
+        6–20 mm M3 socket cap screws. Used for the hip mounts (M3×12, 24 of
+        them), clamshells and shock eye pins.
+    Specs:
+        Thread: M3
+        Head: Socket cap
+        Lengths: 6–20 mm
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0DSFWD6ZG'
+            Link: https://www.amazon.co.uk/dp/B0DSFWD6ZG
+
+M2x6SelfTapping:
+    Name: M2 × 6 self-tapping screw
+    Description: >
+        Used for the femur strip covers (4 per leg) and the camera. Sold in
+        packs of 100.
+    Specs:
+        Size: M2
+        Length: 6 mm
+        Type: Self-tapping
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0F48DC8SS'
+            Link: https://www.amazon.co.uk/dp/B0F48DC8SS
+
+M2_5StandoffKit:
+    Name: M2.5 standoff kit
+    Description: >
+        Assorted M2.5 standoffs for mounting the Pi 5 and the Bus Servo Adapter.
+    Specs:
+        Thread: M2.5
+    Suppliers:
+        Amazon UK:
+            PartNo: 'B0DCS5C7SN'
+            Link: https://www.amazon.co.uk/dp/B0DCS5C7SN
+
+# --- 3D printing ---
+
+Filament_PA12CF:
+    Name: PA12-CF filament, 1 kg
+    Description: >
+        Carbon-fibre nylon filament for the legs. The legs use about 1.7 kg
+        including spares.
+    Specs:
+        Material: PA12-CF
+        Weight: 1 kg
+    Suppliers:
+        Sunlu:
+            PartNo: 'PA12-CF 1kg'
+            Link: https://uk.store.sunlu.com/products/nylon-12-carbon-fiber-pa12-cf-3d-printer-filament-1kg
+
+Filament_Body:
+    Name: Body filament, 1 kg
+    Description: >
+        Filament for the body, lid, pod and shelf. PETG, ASA or PA, your
+        choice.
+    Specs:
+        Material: PETG / ASA / PA
+        Weight: 1 kg
+
+Filament_TPU95A:
+    Name: TPU 95A filament, 500 g
+    Description: >
+        Flexible filament for the feet.
+    Specs:
+        Material: TPU 95A
+        Weight: 500 g
+
+Filament_AccentPETG:
+    Name: Accent PETG filament, 1 kg
+    Description: >
+        Accent colour for the joint caps. Only a small amount is needed.
+    Specs:
+        Material: PETG
+        Weight: 1 kg

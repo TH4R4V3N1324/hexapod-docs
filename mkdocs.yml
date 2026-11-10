@@ -1,0 +1,39 @@
+site_name: Hexapod Build Guide
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.footer
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+validation:
+  nav:
+    omitted_files: warn      # flag pages you forgot to add to the nav
+    not_found: warn
+
+nav:
+  - Home: index.md
+  - Before you start:
+      - Tools & parts: tools-and-parts.md
+      - Printing: printing.md
+      - Electronics: electronics.md
+  - Assembly:
+      - Legs: leg.md
+      - Body: body.md
+      - Wiring: wiring.md
+  - First power-on: first-power-on.md
+  - Using it: using-it.md
+  - Troubleshooting: troubleshooting.md
