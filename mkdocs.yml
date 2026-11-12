@@ -1,10 +1,13 @@
 site_name: Hexapod Build Guide
+repo_url: https://github.com/TH4R4V3N1324/hexapod-docs
+repo_name: hexapod-docs
 theme:
   name: material
   palette:
     - scheme: slate
       primary: deep purple
   features:
+    - navigation.indexes
     - navigation.tabs
     - navigation.sections
     - navigation.footer
@@ -18,22 +21,59 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 validation:
   nav:
     omitted_files: warn      # flag pages you forgot to add to the nav
     not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
 
 nav:
   - Home: index.md
-  - Before you start:
-      - Tools & parts: tools-and-parts.md
-      - Printing: printing.md
-      - Electronics: electronics.md
-  - Assembly:
-      - Legs: leg.md
-      - Body: body.md
-      - Wiring: wiring.md
-  - First power-on: first-power-on.md
-  - Using it: using-it.md
-  - Troubleshooting: troubleshooting.md
+  - Getting started:
+      - Choose a variant: getting-started/choose.md
+      - Safety: getting-started/safety.md
+  - Concepts:
+      - Legs & joints: concepts/legs.md
+      - Coordinate frames: concepts/frames.md
+      - Gaits & modes: concepts/gaits.md
+  - Variants:
+      - Explorer:
+          - variants/explorer/index.md
+          - Parts & tools: variants/explorer/parts.md
+          - Printing: variants/explorer/printing.md
+          - Legs: variants/explorer/legs.md
+          - Body: variants/explorer/body.md
+          - Electronics: variants/explorer/electronics.md
+          - Wiring: variants/explorer/wiring.md
+      - Lite:
+          - variants/lite/index.md
+      - Skeletal:
+          - variants/skeletal/index.md
+  - Control stacks:
+      - ROS 2:
+          - stacks/ros2/index.md
+          - Setup: stacks/ros2/setup.md
+          - Driving: stacks/ros2/driving.md
+          - How it walks: stacks/ros2/walking.md
+          - Mapping & navigation: stacks/ros2/navigation.md
+          - Simulation: stacks/ros2/simulation.md
+          - ROS reference: stacks/ros2/reference.md
+          - Troubleshooting: stacks/ros2/troubleshooting.md
+      - Training: stacks/training.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-hardware
+      name: hexapod-hardware (CAD, PCBs, BOMs)
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-ros2
+      name: hexapod-ros2 (ROS 2 stack)
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-training
+      name: hexapod-training (training)
