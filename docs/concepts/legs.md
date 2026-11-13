@@ -30,7 +30,15 @@ Looking down on the robot with the front at the top:
 - **Legs 1–3 are on the right** (front, middle, rear).
 - **Legs 4–6 are on the left** (rear, middle, front).
 
+In code, [gait core](../stacks/gait-core.md) counts the legs from 0, in the
+same clockwise order: leg 0 in code is leg 1 here.
+
 In the ROS 2 stack, the joints are named `leg<N>_coxa_joint`,
-`leg<N>_femur_joint` and `leg<N>_tibia_joint`. On the Explorer, each joint's
-servo ID is set from its leg and joint: see
-[Explorer wiring](../variants/explorer/wiring.md#servo-ids).
+`leg<N>_femur_joint` and `leg<N>_tibia_joint`.
+
+How each joint maps to a servo depends on the variant:
+
+- **Explorer:** a servo ID on the bus, set from its leg and joint. See
+  [Explorer wiring](../variants/explorer/wiring.md#servo-ids).
+- **Lite:** a Servo 2040 output, three per leg in order. See
+  [Servo2040 wiring](../stacks/servo2040.md#servos).

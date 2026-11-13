@@ -78,8 +78,9 @@ Results go to `/tmp/hexapod_scenarios/results.csv`.
 ## Checking directions
 
 ```bash
-# Unit tests of the foot motion maths
-colcon test --packages-select hexapod_gait_controller && colcon test-result --verbose
+# Unit tests of the foot motion maths, in gait core (from hexapod_ws)
+cmake -S src/hexapod-gait-core -B /tmp/gait_core -DGAIT_CORE_USE_DOUBLE=ON
+cmake --build /tmp/gait_core && ctest --test-dir /tmp/gait_core --output-on-failure
 
 # In Gazebo: drives each direction and checks how the robot moved
 ros2 launch hexapod_bringup hexapod_simulation.launch.py world:=empty_world

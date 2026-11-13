@@ -3,6 +3,11 @@
 The `gait_controller` node turns velocity commands into foot movements, and
 foot positions into joint angles. It runs at 100 Hz.
 
+The walking itself comes from [gait core](../gait-core.md), which the
+[Servo2040](../servo2040.md) stack shares. Everything on this page applies to
+both, except the features that need servo feedback (foot forces, load
+balancing and terrain adaptation), which only the Explorer has.
+
 ## Steps
 
 See [Gaits & modes](../../../concepts/gaits.md) for stance, swing and the

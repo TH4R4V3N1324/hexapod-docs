@@ -40,7 +40,8 @@ robot: controller_teleop → /cmd_vel → gait_controller
 | `hexapod_interfaces` | Custom services and messages |
 | `hexapod_description` | Robot model (URDF), Gazebo worlds, RViz config |
 | `hexapod_hardware_interface` | Servo driver (`ros2_control` plugin), IMU and power monitor drivers, hardware tests |
-| `hexapod_gait_controller` | Kinematics, foot trajectories and the gait state machine |
+| `hexapod-gait-core` | Submodule: the shared [gait core](../gait-core.md) library, built as the `gait_core` package |
+| `hexapod_gait_controller` | The `gait_controller` node, which runs gait core's gait engine |
 | `hexapod_teleop` | Keyboard and gamepad control |
 | `hexapod_bringup` | Launch files, plus SLAM, Nav2 and EKF config |
 | `operator_bringup` | Operator side: gamepad node and Foxglove bridge |
@@ -71,12 +72,17 @@ Both `hexapod_robot` and `hexapod_simulation` take `slam:=true` and
 The robot side runs in Docker. On a dev machine:
 
 ```bash
+git submodule update --init --recursive   # once, for gait core
 cd hexapod_ws
 docker compose -f docker-compose.dev.yml up --build
 # inside the container:
 colcon build --symlink-install
 source install/setup.bash
 ```
+
+Run `colcon build` from `hexapod_ws`: it builds [gait core](../gait-core.md)
+in double precision, using settings in `hexapod_ws/colcon.meta`, and the gait
+controller won't compile without them.
 
 The dev image includes Gazebo, `joy` and other dev tools. The plain
 `docker-compose.yml` builds a lean runtime image for the robot, without

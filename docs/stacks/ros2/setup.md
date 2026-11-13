@@ -14,7 +14,7 @@ clone the code to `~/hexapod-ros2`, then run the setup script once and
 reboot:
 
 ```bash
-git clone git@github.com:TH4R4V3N1324/hexapod-ros2.git ~/hexapod-ros2
+git clone --recursive git@github.com:TH4R4V3N1324/hexapod-ros2.git ~/hexapod-ros2
 ~/hexapod-ros2/pi/setup_pi.sh
 sudo reboot
 ```

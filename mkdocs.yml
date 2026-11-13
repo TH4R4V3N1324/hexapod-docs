@@ -64,6 +64,8 @@ nav:
           - Simulation: stacks/ros2/simulation.md
           - ROS reference: stacks/ros2/reference.md
           - Troubleshooting: stacks/ros2/troubleshooting.md
+      - Servo2040: stacks/servo2040.md
+      - Gait core: stacks/gait-core.md
       - Training: stacks/training.md
 
 extra:
@@ -74,6 +76,12 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/TH4R4V3N1324/hexapod-ros2
       name: hexapod-ros2 (ROS 2 stack)
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-gait-core
+      name: hexapod-gait-core (shared gait library)
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-servo2040
+      name: hexapod-servo2040 (Lite firmware)
     - icon: fontawesome/brands/github
       link: https://github.com/TH4R4V3N1324/hexapod-training
       name: hexapod-training (training)
