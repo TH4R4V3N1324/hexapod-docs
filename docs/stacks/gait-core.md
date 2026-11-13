@@ -7,6 +7,7 @@ the same code runs on a Raspberry Pi and on a microcontroller.
 | Stack | Uses gait core for |
 |---|---|
 | [ROS 2](ros2/index.md) | The `gait_controller` node |
+| [ESP32](esp32.md) | The whole gait, on the ESP32 |
 | [Servo2040](servo2040.md) | The whole gait, on the Servo 2040 |
 
 A change to the gait in gait core reaches every stack, and the robots walk

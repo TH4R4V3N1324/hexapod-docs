@@ -53,7 +53,7 @@ connector pinouts and jumper settings. In short:
   boards.
 
 !!! todo
-    Which GPIO the software uses for `SERVO_EN` isn't documented yet.
+    Driving `SERVO_EN` isn't implemented in any stack yet.
 
 ### Before first power-up
 

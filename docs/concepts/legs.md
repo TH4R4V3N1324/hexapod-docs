@@ -38,7 +38,7 @@ In the ROS 2 stack, the joints are named `leg<N>_coxa_joint`,
 
 How each joint maps to a servo depends on the variant:
 
-- **Explorer:** a servo ID on the bus, set from its leg and joint. See
+- **Explorer** (ROS 2 or ESP32): a servo ID on the bus, set from its leg and joint. See
   [Explorer wiring](../variants/explorer/wiring.md#servo-ids).
 - **Lite:** a Servo 2040 output, three per leg in order. See
   [Servo2040 wiring](../stacks/servo2040.md#servos).

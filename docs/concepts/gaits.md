@@ -34,14 +34,14 @@ only at a safe point, rather than mid-step.
 
 ## Support by stack
 
-Both stacks run the same gait from [gait core](../stacks/gait-core.md), so
+Every stack runs the same gait from [gait core](../stacks/gait-core.md), so
 what differs is mostly down to the hardware.
 
-| | ROS 2 (Explorer) | Servo2040 (Lite) |
-|---|---|---|
-| Tripod, ripple, wave | ✅ | ✅ |
-| Normal, strafe, tilt | ✅ | ✅ |
-| Leveling (IMU) | ✅ | ✅ |
-| Ground contact | From servo load | Not yet |
-| Load balancing, terrain adaptation | ✅ | — (no servo feedback) |
-| Mapping and navigation | ✅ | — |
+| | ROS 2 (Explorer) | ESP32 (Explorer) | Servo2040 (Lite) |
+|---|---|---|---|
+| Tripod, ripple, wave | ✅ | ✅ | ✅ |
+| Normal, strafe, tilt | ✅ | ✅ | ✅ |
+| Leveling (IMU) | ✅ | ✅ | ✅ |
+| Ground contact | From servo load | From servo load | Not yet |
+| Load balancing, terrain adaptation | ✅ | ✅ | — (no servo feedback) |
+| Mapping and navigation | ✅ | — | — |
