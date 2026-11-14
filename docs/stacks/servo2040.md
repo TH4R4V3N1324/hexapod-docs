@@ -10,21 +10,18 @@ The code is in [hexapod-servo2040](https://github.com/TH4R4V3N1324/hexapod-servo
 ## How it fits together
 
 ```
-handheld ──ESP-NOW──► ESP32 receiver ──I²C──► Servo 2040 ──PWM──► 18 hobby servos
-controller                           ◄─ status ──     ▲
-                                                      └── ISM330DHCX IMU (same I²C bus)
+OLED controller ──ESP-NOW──┐
+                           ├► ESP32 receiver ──I²C──► Servo 2040 ──PWM──► 18 hobby servos
+gamepad ──Bluetooth────────┘                ◄─ status ──    ▲
+                                                            └── ISM330DHCX IMU (same I²C bus)
 ```
 
-An **ESP32 receiver** on the robot takes input from a handheld controller
-over ESP-NOW, and passes the joysticks and commands to the Servo 2040 over
-I²C. The Servo 2040 does everything else.
+An **ESP32 receiver** on the robot takes input from the OLED controller over
+ESP-NOW, or from a Bluetooth gamepad, and passes the joysticks and commands
+to the Servo 2040 over I²C. See [Controllers](../controllers.md) for setting
+up the receiver and pairing.
 
-!!! warning "Controller on hold"
-    The handheld controller and ESP32 receiver are a custom design in
-    [hexapod-controller](https://github.com/TH4R4V3N1324/hexapod-controller), built for an earlier prototype. Work on them
-    is paused, so there's currently no maintained way to drive the Lite. The
-    Servo 2040's side of the I²C interface is ready for when there is. 100 times a
-second, it:
+The Servo 2040 does everything else. 100 times a second, it:
 
 1. reads the latest command packet from the ESP32;
 2. reads the IMU;
@@ -34,13 +31,19 @@ second, it:
 If the ESP32 stops answering for 200 ms, the sticks are treated as centred,
 so the robot stops walking.
 
+!!! warning "Controllers untested"
+    The OLED controller and the receiver's gamepad support haven't been
+    tested with this stack yet. See [Controllers](../controllers.md).
+
 ## What's different from ROS 2
 
 Hobby servos only take a position command: they can't report where they are
 or how hard they're pushing. So the Servo2040 stack runs **open loop**:
 
 - At boot it moves the legs into the seated pose and assumes they got there.
-- With no foot forces, **load balancing** and **terrain adaptation** are off.
+- With no foot forces, **load balancing** and **terrain adaptation** are off,
+  and the firmware refuses to turn them on from a controller. Walk and tilt
+  leveling can be switched on and off.
 - **Leveling** still works, using the IMU. If the IMU is missing, the robot
   walks without leveling.
 - Each leg has an input for a **contact switch**, but the gait doesn't use
@@ -52,7 +55,7 @@ or how hard they're pushing. So the Servo2040 stack runs **open loop**:
   seats the legs, as at boot, before standing. Since the servos never report
   anything, the check for lost servos is off.
 
-Other gait settings keep the ROS 2 stack's defaults, except that the femur
+Other gait settings keep gait core's defaults, except that the femur
 and tibia limits are narrowed to what hobby servos can reach. See
 [Gaits & modes](../concepts/gaits.md#support-by-stack).
 

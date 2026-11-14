@@ -1,6 +1,6 @@
 # Electronics
 
-This page gives an overview of the electronics in the Explorer v0.1 and what
+This page gives an overview of the electronics in the Explorer and what
 each part does. For the full parts list, see [Parts & tools](parts.md).
 For how the parts connect, see [Wiring](wiring.md).
 

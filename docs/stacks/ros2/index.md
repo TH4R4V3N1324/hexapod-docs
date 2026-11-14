@@ -17,6 +17,7 @@ on the robot.
 
 ```
 [Gamepad] → operator: game_controller_node → /joy
+   (or a gamepad on the Pi → robot: game_controller_node → /joy)
                                        │  (DDS, same ROS_DOMAIN_ID)
                                        ▼
 robot: controller_teleop → /cmd_vel → gait_controller
@@ -52,7 +53,7 @@ The repo also contains:
 | Folder | |
 |---|---|
 | `foxglove_panel/` | The Hexapod Foxglove panel |
-| `pi/` | Pi setup: I²C, hotspot, start at boot |
+| `pi/` | Pi setup (I²C, hotspot, Bluetooth, start at boot), `update.sh` and `pair_controller.sh` |
 | `steamdeck/` | Steam Deck setup and launch scripts |
 
 ## Launch files

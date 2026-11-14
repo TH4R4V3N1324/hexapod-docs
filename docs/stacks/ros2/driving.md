@@ -1,8 +1,13 @@
 # Driving
 
-You drive the robot from a separate **operator** machine: a Steam Deck or a
-laptop. The operator machine reads the gamepad and shows the robot's state in
-Foxglove Studio. The robot does the rest.
+You drive the robot with a gamepad, either:
+
+- on a separate **operator** machine, a Steam Deck or a laptop, which reads
+  the gamepad and shows the robot's state in Foxglove Studio; or
+- [plugged into or paired with the Pi](#gamepad-on-the-robot), with no
+  operator machine at all.
+
+The robot does the rest.
 
 ## Connecting
 
@@ -60,27 +65,44 @@ Foxglove Studio. The robot does the rest.
     The operator machine and the robot must use the same `ROS_DOMAIN_ID`, so
     the gamepad's `/joy` messages reach the robot.
 
+## Gamepad on the robot
+
+You don't need a Steam Deck or laptop: the robot reads a gamepad connected to
+the Pi itself, with the same [controls](../../controllers.md#gamepad-controls). Any controller SDL knows
+works, including Xbox One and Series, DualShock 4, DualSense, Switch Pro and
+8BitDo.
+
+- **USB:** plug it in, even while the robot is running.
+- **Bluetooth:** put the controller in pairing mode, then run this on the Pi
+  (not in the container):
+
+    ```bash
+    ~/hexapod-ros2/pi/pair_controller.sh
+    ```
+
+    The script lists how to enter pairing mode on common controllers. The Pi
+    trusts the controller, so from then on turning it on reconnects it. If
+    its name isn't recognised, pass its address:
+    `pair_controller.sh AA:BB:CC:DD:EE:FF`.
+
+`ros2 topic echo /joy` shows whether it's being read. Launch with
+`joy:=false` to turn it off.
+
+!!! warning
+    Don't drive with a gamepad on the Pi and the Steam Deck at the same time.
+    Both publish `/joy`, and the robot follows whichever spoke last.
+
+
 ## Gamepad controls
 
-Buttons are named Xbox-first, with PlayStation in brackets. The Steam Deck's
-controls follow the Xbox layout.
+The gamepad layout is the same on every stack: see
+[Gamepad controls](../../controllers.md#gamepad-controls). In short: the
+sticks walk and turn, **RB [R1]** sits and stands (hold 2 s to power down),
+Start and Back change the mode and gait, the D-pad sets the body height, and
+A, B, X and Y switch the features below.
 
-| Input | Walking (normal / strafe) | Tilt mode |
-|---|---|---|
-| Left stick | Forward/back, left/right | Shift the body forward/back, left/right |
-| Right stick X | Turn | Roll |
-| Right stick Y | — | Pitch (forward lowers the nose) |
-| LT / RT [L2 / R2] | — | Yaw left / right |
-| D-pad up / down | — | Raise / lower the body |
-| Start [Options] | Next mode | Next mode |
-| Back [Create] | Next gait | Next gait |
-| A [Cross] | Terrain adaptation on/off | Terrain adaptation on/off |
-| B [Circle] | Walk leveling on/off | Walk leveling on/off |
-| X [Square] | Load balancing on/off | Load balancing on/off |
-| Y [Triangle] | Tilt leveling on/off | Tilt leveling on/off |
-
-Full stick is the robot's top speed for the current gait. The gamepad does
-nothing until the robot's gait controller is up and has reported its limits.
+The gamepad does nothing until the robot's gait controller is up and has
+reported its limits.
 
 To check a different controller's numbering, run `ros2 topic echo /joy` and
 move each control. Axis and button numbers are parameters of
@@ -107,7 +129,7 @@ ros2 run hexapod_teleop keyboard_teleop
 
 ## Modes and gaits
 
-The ROS 2 stack supports all three [modes and gaits](../../../../concepts/gaits.md).
+The ROS 2 stack supports all three [modes and gaits](../../concepts/gaits.md).
 With tripod, its top speed is about 0.17 m/s. A gait change takes effect at
 the start of the next step, when every foot is planted. When entering tilt
 mode, the legs first step back to their start positions; when leaving, the
@@ -137,9 +159,9 @@ See [How it walks](walking.md) for how these work.
 
 ## Body height
 
-The body stands at 12 cm by default and can go from 6 to 16 cm. In tilt mode,
-use the D-pad. Otherwise, call `/set_height` with the feet's height below the
-hips, as a negative number:
+The body stands at 12 cm by default and can go from 6 to 16 cm. Use the
+D-pad, or call `/set_height` with the feet's height below the hips, as a
+negative number:
 
 ```bash
 ros2 service call /set_height hexapod_interfaces/srv/SetHeight "{height: -0.10}"

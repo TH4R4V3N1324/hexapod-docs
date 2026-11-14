@@ -7,7 +7,7 @@ The hexapod comes in hardware **variants**, each with one or more
 
 | Variant | Servos | Brain | Status |
 |---|---|---|---|
-| [**Explorer**](../variants/explorer/index.md) | ST3215 serial bus servos, with position and load feedback | Raspberry Pi 5, with lidar, depth camera and IMU; or an ESP32 and IMU | v0.1, in development |
+| [**Explorer**](../variants/explorer/index.md) | ST3215 serial bus servos, with position and load feedback | Raspberry Pi 5, with lidar, depth camera and IMU; or an ESP32 and IMU | v0.2, in development |
 | [**Lite**](../variants/lite/index.md) | Hobby PWM servos | Pimoroni Servo 2040, with an ESP32 receiver and IMU | In development |
 | [**Skeletal**](../variants/skeletal/index.md) | To be decided | To be decided | Planned |
 

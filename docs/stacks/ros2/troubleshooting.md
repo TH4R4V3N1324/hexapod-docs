@@ -5,7 +5,11 @@ Problems with the Explorer and the ROS 2 stack.
 ## The robot doesn't respond to the gamepad
 
 - **Is it standing?** After startup the robot sits and ignores movement
-  commands until it's told to stand. Press *Stand up* in the Foxglove panel.
+  commands until it's told to stand. Press **RB [R1]** on the gamepad, or
+  *Stand up* in the Foxglove panel.
+- **Gamepad on the Pi?** Check `ros2 topic echo /joy` shows it. For
+  Bluetooth, pair it with `pi/pair_controller.sh`. Don't use it and the Steam
+  Deck at once: both publish `/joy`.
 - **Same ROS domain?** The operator machine and the robot need the same
   `ROS_DOMAIN_ID`, or `/joy` never reaches the robot.
 - **Wrong buttons?** Run `ros2 topic echo /joy` on the robot and move each
@@ -40,10 +44,19 @@ Check the start-at-boot service:
 journalctl -u hexapod-start
 ```
 
+- **First boot after setup?** It builds the image first, which can take a
+  while.
+- **Running old code?** Booting never updates the code. Run `pi/update.sh`
+  (see [Updating the robot](setup.md#updating-the-robot)). The log's first
+  line shows which commit it started.
+- **`update.sh` stopped at the pull?** The Pi has changes of its own. Commit
+  or discard them, then run it again.
+
 ## The servos don't move
 
-- **Is servo power on?** The servos stay off until the first *Stand up*, and
-  after the E-stop or a critical battery has cut them. Press *Stand up*.
+- **Is servo power on?** The servos stay off until the first stand-up, and
+  after a power-down, the E-stop or a critical battery has cut them. Press
+  RB on the gamepad or *Stand up* in the Foxglove panel.
 - **Is `SERVO_EN` reaching the leg hubs?** The leg hubs only power the servos
   when `SERVO_EN` is high **and** the E-stop loop is closed. The
   `servo_power` node logs `Servo power on` when it raises `SERVO_EN`. Check

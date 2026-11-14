@@ -17,14 +17,17 @@ The code is in [hexapod-esp32](https://github.com/TH4R4V3N1324/hexapod-esp32).
 ## How it fits together
 
 ```
-handheld ──ESP-NOW──► ESP32 ──UART──► Bus Servo Adapter ──► leg hubs ──► 18 ST3215 servos
+OLED     ──ESP-NOW──► ESP32 ──UART──► Bus Servo Adapter ──► leg hubs ──► 18 ST3215 servos
 controller ◄─ status ──  │ ▲                                  ▲          (position and load back)
                          │ └── I²C: IMU, leg hubs' INA226s ───┤
                          └──── SERVO_EN (GPIO 25) ────────────┘
 ```
 
-The handheld controller talks to the ESP32 directly over ESP-NOW: there's no
-separate receiver. 100 times a second, the ESP32:
+The OLED controller talks to the robot's ESP32 directly over ESP-NOW. To
+drive it with a Bluetooth gamepad instead, a separate ESP32 receiver relays
+the gamepad over ESP-NOW. See [Controllers](../controllers.md).
+
+100 times a second, the robot's ESP32:
 
 1. takes the latest packet from the controller;
 2. reads the IMU;
@@ -40,11 +43,9 @@ Reading and writing the servo bus takes about 4 ms of each 10 ms tick. If no
 packet arrives for 200 ms, the sticks are treated as centred, so the robot
 stops walking.
 
-!!! warning "Controller on hold"
-    The handheld controller is a custom design in
-    [hexapod-controller](https://github.com/TH4R4V3N1324/hexapod-controller),
-    built for an earlier prototype. Work on it is paused, so there's
-    currently no maintained way to drive the robot with this stack. You can
+!!! warning "Controllers untested"
+    The OLED controller and the receiver's gamepad support haven't been
+    tested with this stack yet. See [Controllers](../controllers.md). You can
     still set up and test the servos from the USB console.
 
 ## Compared with the other stacks
@@ -59,10 +60,12 @@ stops walking.
 | Mapping and navigation | ✅ | — | — |
 | Servo power switch | `SERVO_EN` | `SERVO_EN` | None (stops the PWM signals) |
 | Battery behaviour | ✅ | ✅ | Off until set up |
-| Driven by | Foxglove, Steam Deck | Handheld controller (ESP-NOW) | Handheld controller, through an ESP32 receiver |
+| Driven by | Steam Deck, laptop, or a gamepad on the Pi | OLED controller, or a gamepad through a receiver | OLED controller or a gamepad, through a receiver |
 
 All gait settings keep gait core's defaults, except that with a `SERVO_EN`
-pin the servos stay off until the first stand command.
+pin the servos stay off until the first stand command. All four features
+(terrain adaptation, walk leveling, load balancing and tilt leveling) can be
+switched on and off from a gamepad's A, B, X and Y buttons.
 
 ## Wiring
 
@@ -112,10 +115,11 @@ inside it. In an existing clone, run
 
 ### Pair the controller
 
-The firmware only accepts packets from the controller whose MAC address is
-in `CONTROLLER_MAC` in `include/RobotConfig.h`. It prints the address of any
-other sender over USB serial (`Ignored a packet from ...`), so you can copy
-it in and flash again.
+The firmware only accepts packets from the MAC address in `CONTROLLER_MAC`
+in `include/RobotConfig.h`: the OLED controller's, or the receiver's when
+it's relaying a gamepad. It prints the address of any other sender over USB
+serial (`Ignored a packet from ...`), so you can copy it in and flash again.
+See [Pairing](../controllers.md#pairing).
 
 ## Servo setup
 

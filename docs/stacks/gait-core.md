@@ -1,18 +1,21 @@
 # Gait core
 
 [hexapod-gait-core](https://github.com/TH4R4V3N1324/hexapod-gait-core) is the walking brain shared by every control stack:
-the gait, and the behaviours that react to the robot's sensors. It's plain
+the gait, the behaviours that react to the robot's sensors, and what every
+stack has to agree on to be driven the same way: the controller packets and
+the gamepad layout. It's plain
 C++17 with no ROS, Arduino or Pico SDK dependency, so the same code runs on a
 Raspberry Pi and on a microcontroller.
 
 | Stack | Uses gait core for |
 |---|---|
-| [ROS 2](ros2/index.md) | The `gait_controller` node, and the battery decisions in `behaviour_manager` |
-| [ESP32](esp32.md) | The whole gait and battery behaviour, on the ESP32 |
-| [Servo2040](servo2040.md) | The whole gait and battery behaviour, on the Servo 2040 |
+| [ROS 2](ros2/index.md) | The `gait_controller` node, the battery decisions in `behaviour_manager`, and the gamepad layout in `controller_teleop` |
+| [ESP32](esp32.md) | The whole gait and battery behaviour, and the controller packets |
+| [Servo2040](servo2040.md) | The whole gait and battery behaviour, and the controller packets |
+| [Controllers](../controllers.md) | The controller packets, and the receiver's gamepad layout |
 
-A change in gait core reaches every stack, so the robots walk and react the
-same way.
+A change in gait core reaches every stack, so the robots walk, react and
+handle a gamepad the same way.
 
 ## What's in it
 
@@ -31,6 +34,9 @@ same way.
   takes sensor readings and decides what to do; the stack carries it out
   with its own hardware. The gait doesn't depend on them, so a robot can use
   the gait alone.
+- **The protocol and the gamepad layout,** two small header-only libraries
+  with no dependencies at all, not even Eigen, so controller firmware can use
+  them too.
 
 ### Servo power
 
@@ -66,6 +72,33 @@ critical sit, and the monitor never stands the robot back up by itself. If a
 power monitor stops reporting for 2 seconds it's ignored, and the level
 holds rather than changing. How a warning is shown, such as a controller
 rumble, is up to each stack.
+
+### Protocol
+
+`gait_core::protocol` (`hexapod_protocol/packets.h`) defines the packets
+between a controller or receiver and a microcontroller robot: ESP-NOW for
+the ESP32 stack, I²C for the Servo2040 stack. It's valid C as well as C++,
+since some controller firmware is C.
+
+- **Controller to robot**, every 10 ms: the sticks, tilt yaw and height, a
+  body height and a command.
+- **Robot to controller**, in reply: its height, gait and mode, whether it's
+  seated, whether the servos are powered, which features are on, and
+  calibration offsets when asked for.
+
+Both start with a **protocol version** (currently 2), and a robot or
+controller drops packets of any other version. See
+[Controllers](../controllers.md#how-it-fits-together).
+
+### Teleop
+
+`gait_core::teleop` (`hexapod_teleop/gamepad_teleop.hpp`) is the
+[gamepad layout](../controllers.md#gamepad-controls), as code. Each stack
+feeds it the gamepad's state and whether the robot is seated or in tilt
+mode, and gets back velocities, a tilt pose and events: next mode or gait,
+feature toggles, sit or stand, power down and height steps. ROS 2's
+`controller_teleop` and the controller receiver both run it, so a gamepad
+drives every stack the same way.
 
 ## Conventions
 
@@ -110,5 +143,8 @@ for the RP2040's Cortex-M0+.
 
 It can be linked as a CMake subproject, an installed CMake package (which is
 how colcon builds it for ROS 2), or a PlatformIO library. The gait is
-`gait_core::gait_core` and the behaviours are `gait_core::behaviour`. See the
+`gait_core::gait_core`, the behaviours are `gait_core::behaviour`, and the
+protocol and gamepad layout are `gait_core::protocol` and `gait_core::teleop`.
+A controller that only needs those two can just add `include/` to its
+include path. See the
 [README](https://github.com/TH4R4V3N1324/hexapod-gait-core#linking).

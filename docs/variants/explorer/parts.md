@@ -3,7 +3,7 @@
 ## Parts
 
 The [bill of materials](https://github.com/TH4R4V3N1324/hexapod-hardware/blob/main/explorer/bom.csv) in hexapod-hardware is the
-parts list for the Explorer v0.1, with quantities and suppliers. The main
+parts list for the Explorer v0.2, with quantities and suppliers. The main
 components are:
 
 - 18 × ST3215 serial bus servos and a Waveshare Bus Servo Adapter (A)

@@ -11,7 +11,7 @@
 |---|---|---|---|
 | `/cmd_vel` | `geometry_msgs/Twist` | `keyboard_teleop`, `controller_teleop`, Nav2 | `gait_controller` |
 | `/body_pose` | `geometry_msgs/Pose` | `controller_teleop` | `gait_controller` (tilt mode) |
-| `/joy` | `sensor_msgs/Joy` | `game_controller_node` (operator) | `controller_teleop` |
+| `/joy` | `sensor_msgs/Joy` | `game_controller_node` (operator, or the robot's own for a gamepad on the Pi) | `controller_teleop` |
 | `/joint_states` | `sensor_msgs/JointState` | `joint_state_broadcaster` | `gait_controller`, `robot_state_publisher` |
 | `/joint_commands` | `sensor_msgs/JointState` | `gait_controller` | `joint_state_relay` |
 | `/hexapod_joint_controller/commands` | `std_msgs/Float64MultiArray` | `joint_state_relay` | `hexapod_joint_controller` |
@@ -19,7 +19,7 @@
 | `/imu/data` | `sensor_msgs/Imu` | `imu_filter_madgwick` (robot), Gazebo (sim) | |
 | `/power/left`, `/power/right` | `sensor_msgs/BatteryState` | `ina226_node` | |
 | `/foot_force/leg1` … `leg6` | `geometry_msgs/WrenchStamped` | `gait_controller` | |
-| `/seated` | `std_msgs/Bool` | `gait_controller` | |
+| `/seated` | `std_msgs/Bool` (latched) | `gait_controller` | `controller_teleop` |
 | `/servo_power` | `std_msgs/Bool` (latched) | `gait_controller` | `servo_power` (drives `SERVO_EN`) |
 | `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | `behaviour_manager` (battery) | Foxglove panel |
 | `/joy/set_feedback` | `sensor_msgs/JoyFeedback` | `behaviour_manager` (low-battery rumble) | gamepad |
@@ -38,7 +38,7 @@
 | `/set_gait` | `hexapod_interfaces/SetGait` | `0` tripod, `1` ripple, `2` wave |
 | `/set_mode` | `hexapod_interfaces/SetMode` | `0` normal, `1` strafe, `2` tilt |
 | `/set_height` | `hexapod_interfaces/SetHeight` | Feet's height below the hips, negative: `-0.12` for 12 cm. Range 0.06–0.16 m |
-| `/get_capabilities` | `hexapod_interfaces/GetCapabilities` | Available modes and gaits, current speed and tilt limits, current mode and gait |
+| `/get_capabilities` | `hexapod_interfaces/GetCapabilities` | Available modes and gaits, current speed and tilt limits, current mode and gait, and the current, minimum and maximum body height (positive, in m) |
 | `/sit` | `std_srvs/SetBool` | `true` sits, `false` stands (and powers the servos if they're off) |
 | `/power_down` | `std_srvs/Trigger` | Sits, then turns servo power off |
 | `/set_terrain_adaptation` | `std_srvs/SetBool` | |

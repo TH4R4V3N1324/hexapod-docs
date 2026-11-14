@@ -9,10 +9,20 @@ For a simpler build, the [ESP32 stack](../../stacks/esp32.md) drives the
 same servos from an ESP32 instead of the Pi. It still feels the ground, but
 has no lidar or cameras, so it can't map.
 
-!!! warning "v0.1: in development"
+!!! warning "v0.2: in development"
     The Explorer isn't ready to build yet. The parts, bill of materials and
-    instructions are incomplete and may change. (v0.1 is the first public
-    release of the internal V6.1 design.)
+    instructions are incomplete and may change.
+
+## Versions
+
+| Version | Changes |
+|---|---|
+| **v0.2** | Tibia cartridge redesigned to load from the top, with looser bearing tolerances: the tight fit crushed the bearings' outer shells and made the guide rods bind. Slightly looser shank fit. New bearing spacers, two per leg. |
+| v0.1 | First public release (internal V6.1). |
+
+**Upgrading from v0.1:** reprint the tibia cartridges, shanks and bearing
+spacers. See the
+[changelog](https://github.com/TH4R4V3N1324/hexapod-hardware/blob/main/explorer/CHANGELOG.md).
 
 ## What's in it
 

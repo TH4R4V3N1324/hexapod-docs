@@ -24,6 +24,7 @@ The script:
 - enables **I²C at 400 kHz** and the **servo UART** (`/dev/ttyAMA0`), and
   installs `i2c-tools` and `iw`;
 - installs the udev rule that names the lidar **`/dev/rplidar`**;
+- turns on **Bluetooth**, for [game controllers](driving.md#gamepad-on-the-robot);
 - sets the Pi's hostname to **`hexapod`**;
 - creates a **Wi-Fi hotspot** called `hexapod` at **192.168.50.1**, so the
   Steam Deck can connect directly without relying on a home router;
@@ -49,17 +50,38 @@ HOTSPOT_PASSWORD=yourpassword ~/hexapod-ros2/pi/setup_pi.sh
 
 ### Start at boot
 
-At every boot, `hexapod-start.service`:
+At every boot, `hexapod-start.service` starts the container with
+`docker compose up -d`, using the code and image already on the Pi. It
+**never pulls code**, so the robot boots the same way online or offline, and
+never changes unless you update it. It only builds the image if there isn't
+one yet, on the first boot after setup, which can take a while.
 
-1. pulls the latest code (fast-forward only);
-2. rebuilds the Docker image, picking up new ROS releases;
-3. starts the container with `docker compose up -d`.
-
-If the Pi is offline, it starts the image it already has. To see what it did:
+To see what it did:
 
 ```bash
 journalctl -u hexapod-start
 ```
+
+### Updating the robot
+
+To update the robot's code, run this on the Pi:
+
+```bash
+~/hexapod-ros2/pi/update.sh
+```
+
+It:
+
+1. pulls the latest code, **fast-forward only**: if the Pi has changes of
+   its own that the pull would merge or overwrite, it stops and says so;
+2. updates the submodules, including [gait core](../gait-core.md);
+3. rebuilds the Docker image with the newest ROS base image, while the robot
+   keeps running;
+4. restarts the container on the new image.
+
+`update.sh --no-build` updates the code only, and the robot keeps running the
+old image. If an update changes the other scripts in `pi/`, run
+`pi/setup_pi.sh` again to install them.
 
 !!! warning
     The default container runs the stack on **mock hardware**
@@ -186,10 +208,11 @@ ros2 launch hexapod_bringup hexapod_robot.launch.py
 | `hardware` | `st3215` | `st3215` for the real servos, `mock` for no hardware |
 | `serial_port` | `/dev/ttyAMA0` | Servo bus port |
 | `update_rate` | `100` | Control loop rate (Hz) |
+| `joy` | `true` | Read a [gamepad on the Pi](driving.md#gamepad-on-the-robot) |
 
 On startup, the servos stay **unpowered**: the leg hubs' `SERVO_EN` is low.
-When you tell the robot to **stand up**, for example with the Foxglove
-panel's *Stand up* button, it:
+When you tell the robot to **stand up**, with **RB [R1]** on the gamepad or
+the Foxglove panel's *Stand up* button, it:
 
 1. switches servo power on and waits until all 18 servos answer, holding
    each one where it is as it does;
@@ -201,7 +224,7 @@ It ignores movement commands until it's standing.
 
 If the servos stop answering, for example because the E-stop was pressed,
 the robot turns servo power off. **Releasing the E-stop doesn't move it:**
-press *Stand up* again. See [Servo power](../gait-core.md#servo-power).
+stand it up again. See [Servo power](../gait-core.md#servo-power).
 
 Servos that don't answer are logged and retried, one at a time, so they
 can't stall the control loop. The IMU and power monitor drivers keep retrying

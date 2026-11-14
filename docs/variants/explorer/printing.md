@@ -16,8 +16,9 @@ reference build uses PA12-CF for the legs for extra stiffness. There are two
 exceptions:
 
 - **Feet: TPU (required).** They need to flex for grip.
-- **Tibia cartridges: PETG (required).** Their bearing fit was tuned in PETG.
-  Print the **shanks** in PETG as well, since the rod fits are tuned as a pair.
+- **Tibia cartridges and bearing spacers: PETG (required).** The bearing fit
+  was tuned in PETG. Print the **shanks** in PETG as well, since the rod fits
+  are tuned as a pair.
 
 Things to know:
 
@@ -36,4 +37,4 @@ Things to know:
 - **Camera pod:** shell and plate.
 - **Legs**, six of each: leg mount and cap, coxa (two halves and a panel),
   femur (two halves and a panel), tibia, tibia cartridge, shank and foot,
-  plus five joint caps per leg.
+  plus two bearing spacers and five joint caps per leg.

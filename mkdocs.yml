@@ -68,6 +68,7 @@ nav:
       - Servo2040: stacks/servo2040.md
       - Gait core: stacks/gait-core.md
       - Training: stacks/training.md
+  - Controllers: controllers.md
 
 extra:
   social:
@@ -86,6 +87,9 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/TH4R4V3N1324/hexapod-servo2040
       name: hexapod-servo2040 (Lite firmware)
+    - icon: fontawesome/brands/github
+      link: https://github.com/TH4R4V3N1324/hexapod-controller
+      name: hexapod-controller (controller and receiver firmware)
     - icon: fontawesome/brands/github
       link: https://github.com/TH4R4V3N1324/hexapod-training
       name: hexapod-training (training)
