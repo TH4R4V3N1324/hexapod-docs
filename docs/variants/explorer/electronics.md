@@ -49,9 +49,9 @@ and one for the right. Each board:
   blade fuse;
 - **makes 5 V at 5 A** for the Pi, sensors and other peripherals;
 - **measures its side's current, voltage and power** with an INA226 on I²C;
-- **switches servo power** only when the Pi's `SERVO_EN` signal is high
-  **and** the E-stop loop is closed, so the servos stay off while the Pi
-  boots;
+- **switches servo power** only when the controller's `SERVO_EN` signal is high
+  **and** the E-stop loop is closed, so the servos stay off until the
+  software asks for them;
 - **switches itself fully on and off** from a small latching switch.
 
 The two boards differ only in the INA226 address, set by jumper JP1: left is

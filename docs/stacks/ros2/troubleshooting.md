@@ -42,9 +42,14 @@ journalctl -u hexapod-start
 
 ## The servos don't move
 
-- **Is servo power on?** The leg hubs only power the servos when `SERVO_EN` is
-  high **and** the E-stop loop is closed. Check the E-stop isn't pressed and
-  its wires reach J8 on both boards.
+- **Is servo power on?** The servos stay off until the first *Stand up*, and
+  after the E-stop or a critical battery has cut them. Press *Stand up*.
+- **Is `SERVO_EN` reaching the leg hubs?** The leg hubs only power the servos
+  when `SERVO_EN` is high **and** the E-stop loop is closed. The
+  `servo_power` node logs `Servo power on` when it raises `SERVO_EN`. Check
+  the E-stop isn't pressed, its wires reach J8 on both boards, and
+  `SERVO_EN` is wired to the GPIO in `gpio_lines` in
+  `hexapod_hardware_interface/config/sensors.yaml` (GPIO 17 by default).
 - **Is the power switch wired to both boards?** Each leg hub stays off until
   its J11 pins 1–2 are shorted.
 - **Fuses:** each leg has its own 5 A fuse on its leg hub.

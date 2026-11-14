@@ -83,6 +83,10 @@ these in the container with `ros2 run hexapod_hardware_interface <test>`:
 `test_camera.sh` and `test_tof.py` run on the Pi itself, outside the
 container.
 
+!!! todo
+    The hardware tests don't switch `SERVO_EN` on, so with the leg hubs the
+    servos are unpowered while they run.
+
 See the
 [hardware tests README](https://github.com/TH4R4V3N1324/hexapod-ros2/blob/main/hexapod_ws/src/hexapod_hardware_interface/hardware_tests/README.md)
 for how to use each test and a suggested bring-up order.
@@ -183,18 +187,34 @@ ros2 launch hexapod_bringup hexapod_robot.launch.py
 | `serial_port` | `/dev/ttyAMA0` | Servo bus port |
 | `update_rate` | `100` | Control loop rate (Hz) |
 
-On startup the robot:
+On startup, the servos stay **unpowered**: the leg hubs' `SERVO_EN` is low.
+When you tell the robot to **stand up**, for example with the Foxglove
+panel's *Stand up* button, it:
 
-1. waits until it has readings from all 18 joints;
-2. moves each leg in a straight line to the **seated** pose (servo torque is
-   only switched on after each servo's goal has been set to its current
-   position, so the legs don't jump);
-3. stays seated until told to **stand up**, for example with the Foxglove
-   panel's *Stand up* button. It ignores movement commands until then.
+1. switches servo power on and waits until all 18 servos answer, holding
+   each one where it is as it does;
+2. moves each leg in a straight line from wherever it is to the **seated**
+   pose;
+3. stands up.
 
-Servos that don't reply are logged and skipped rather than stopping
-everything. The IMU and power monitor drivers keep retrying if their device
-is missing, so a loose connection recovers without a restart.
+It ignores movement commands until it's standing.
+
+If the servos stop answering, for example because the E-stop was pressed,
+the robot turns servo power off. **Releasing the E-stop doesn't move it:**
+press *Stand up* again. See [Servo power](../gait-core.md#servo-power).
+
+Servos that don't answer are logged and retried, one at a time, so they
+can't stall the control loop. The IMU and power monitor drivers keep retrying
+if their device is missing, so a loose connection recovers without a
+restart.
+
+### Battery
+
+The `behaviour_manager` node watches both leg hubs' power monitors using gait
+core's [battery behaviour](../gait-core.md#battery-behaviour). When the
+battery is low it rumbles the gamepad; when it's critical it sits the robot
+down and turns servo power off. Its settings are in
+`hexapod_bringup/config/behaviour_manager.yaml`.
 
 ## 5. Check the lidar
 

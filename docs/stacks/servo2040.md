@@ -46,6 +46,11 @@ or how hard they're pushing. So the Servo2040 stack runs **open loop**:
 - Each leg has an input for a **contact switch**, but the gait doesn't use
   them yet.
 - There's no mapping or navigation.
+- There's **no servo power switch**. When gait core's
+  [servo power](gait-core.md#servo-power) turns off, the firmware stops the
+  PWM signals and the servos go limp. A stand command starts them again and
+  seats the legs, as at boot, before standing. Since the servos never report
+  anything, the check for lost servos is off.
 
 Other gait settings keep the ROS 2 stack's defaults, except that the femur
 and tibia limits are narrowed to what hobby servos can reach. See
@@ -116,6 +121,19 @@ Diagnostics come over the USB serial port.
 
 Five seconds after boot, the firmware moves each leg in turn into the seated
 pose, then stands up.
+
+**Power down** (`CMD_POWER_DOWN` from the ESP32) sits the robot down, then
+stops the servos. A stand command starts them again.
+
+## Battery
+
+The firmware can feed the Servo 2040's servo supply voltage and current to
+gait core's [battery behaviour](gait-core.md#battery-behaviour), which warns
+when it's low and sits down and stops the servos when it's critical.
+
+It's **off by default** (`robot::BATTERY_MONITORING`): gait core's thresholds
+are for a 3S pack and would sit a 6 V servo supply down at once. To use it,
+set thresholds for your supply in `robot::batteryParams()` and turn it on.
 
 ## Calibration
 

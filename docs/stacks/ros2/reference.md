@@ -19,7 +19,10 @@
 | `/imu/data` | `sensor_msgs/Imu` | `imu_filter_madgwick` (robot), Gazebo (sim) | |
 | `/power/left`, `/power/right` | `sensor_msgs/BatteryState` | `ina226_node` | |
 | `/foot_force/leg1` … `leg6` | `geometry_msgs/WrenchStamped` | `gait_controller` | |
-| `/seated` | | `gait_controller` | |
+| `/seated` | `std_msgs/Bool` | `gait_controller` | |
+| `/servo_power` | `std_msgs/Bool` (latched) | `gait_controller` | `servo_power` (drives `SERVO_EN`) |
+| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | `behaviour_manager` (battery) | Foxglove panel |
+| `/joy/set_feedback` | `sensor_msgs/JoyFeedback` | `behaviour_manager` (low-battery rumble) | gamepad |
 | `/odometry/legs` | `nav_msgs/Odometry` | `gait_controller` | `ekf_filter_node` |
 | `/odometry/filtered` | `nav_msgs/Odometry` | `ekf_filter_node` | |
 | `/lidar/scan` | `sensor_msgs/LaserScan` | `rplidar_ros` (robot), Gazebo (sim) | `laser_filters` |
@@ -36,6 +39,8 @@
 | `/set_mode` | `hexapod_interfaces/SetMode` | `0` normal, `1` strafe, `2` tilt |
 | `/set_height` | `hexapod_interfaces/SetHeight` | Feet's height below the hips, negative: `-0.12` for 12 cm. Range 0.06–0.16 m |
 | `/get_capabilities` | `hexapod_interfaces/GetCapabilities` | Available modes and gaits, current speed and tilt limits, current mode and gait |
+| `/sit` | `std_srvs/SetBool` | `true` sits, `false` stands (and powers the servos if they're off) |
+| `/power_down` | `std_srvs/Trigger` | Sits, then turns servo power off |
 | `/set_terrain_adaptation` | `std_srvs/SetBool` | |
 | `/set_terrain_map` | `std_srvs/SetBool` | |
 | `/set_walk_leveling` | `std_srvs/SetBool` | |

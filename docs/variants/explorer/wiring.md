@@ -32,7 +32,7 @@ connector pinouts and jumper settings. In short:
 | J2 (Micro-Fit, 2-pin) | 5 V out to the Pi (or peripherals) |
 | J3–J5 (SPOX, 3-pin) | Legs 1–3 of that side |
 | J6 BUS_IN (SPOX, 3-pin) | Bus Servo Adapter |
-| J7 CTRL (JST PH, 5-pin) | Pi: SDA, SCL, INA ALERT, SERVO_EN, GND |
+| J7 CTRL (JST PH, 5-pin) | Controller board (Pi or ESP32): SDA, SCL, INA ALERT, SERVO_EN, GND |
 | J8 KILL (JST PH, 2-pin) | E-stop (normally closed) |
 | J9, J10 (Qwiic) | I²C daisy-chain |
 | J11 PWR_SW (JST PH, 4-pin) | Power switch and its light |
@@ -46,14 +46,18 @@ connector pinouts and jumper settings. In short:
   4 (−) on **one** board only.
 - **E-stop:** use a button with two normally-closed contacts, and wire one
   contact across each board's J8.
-- **SERVO_EN:** drive it from a Pi GPIO that's **pulled down at boot**
-  (GPIO9–27), so the servos stay off while the Pi starts.
+- **SERVO_EN:** wire both boards' J7 pin 4 to one GPIO, so the two sides
+  switch together. The leg hubs' pull-downs keep the servos off until the
+  software raises it.
+
+    | Stack | GPIO | Set in |
+    |---|---|---|
+    | [ROS 2](../../stacks/ros2/index.md) (Pi) | GPIO 17 | `gpio_lines` in `hexapod_hardware_interface/config/sensors.yaml`. Use GPIO 9–27, which are pulled down at boot |
+    | [ESP32](../../stacks/esp32.md) | GPIO 25 | `SERVO_ENABLE_PIN` in `include/RobotConfig.h` |
+
 - **Never tie the two boards' 5 V outputs together.** Watch out for this
   through USB VBUS, if the Pi and a USB device are powered from different
   boards.
-
-!!! todo
-    Driving `SERVO_EN` isn't implemented in any stack yet.
 
 ### Before first power-up
 
@@ -61,6 +65,8 @@ connector pinouts and jumper settings. In short:
 - [ ] JP3 on 1–2 (3.3 V logic, for the Pi and Qwiic)
 - [ ] JP2, JP4, JP5 and JP6 open. JP2 and JP6 bypass the kill loop and the
   power switch, for bench use only. JP4 and JP5 aren't needed with a Pi.
+  With an ESP32, bridge JP5 on one board for the I²C pull-ups (see
+  [ESP32 wiring](../../stacks/esp32.md#wiring)).
 - [ ] XT30 and bus adapter cable pin 1 checked against your leads
 - [ ] Fuses F1–F3 fitted (5 A mini blade)
 

@@ -39,9 +39,10 @@ robot: controller_teleop → /cmd_vel → gait_controller
 |---|---|
 | `hexapod_interfaces` | Custom services and messages |
 | `hexapod_description` | Robot model (URDF), Gazebo worlds, RViz config |
-| `hexapod_hardware_interface` | Servo driver (`ros2_control` plugin), IMU and power monitor drivers, hardware tests |
+| `hexapod_hardware_interface` | Servo driver (`ros2_control` plugin), IMU and power monitor drivers, the `SERVO_EN` driver, hardware tests |
 | `hexapod-gait-core` | Submodule: the shared [gait core](../gait-core.md) library, built as the `gait_core` package |
 | `hexapod_gait_controller` | The `gait_controller` node, which runs gait core's gait engine |
+| `hexapod_control` | `behaviour_manager`, which runs gait core's battery behaviour |
 | `hexapod_teleop` | Keyboard and gamepad control |
 | `hexapod_bringup` | Launch files, plus SLAM, Nav2 and EKF config |
 | `operator_bringup` | Operator side: gamepad node and Foxglove bridge |

@@ -45,3 +45,5 @@ what differs is mostly down to the hardware.
 | Ground contact | From servo load | From servo load | Not yet |
 | Load balancing, terrain adaptation | ✅ | ✅ | — (no servo feedback) |
 | Mapping and navigation | ✅ | — | — |
+| Servo power off until standing, and on E-stop | ✅ | ✅ | Power down only (stops the PWM) |
+| Battery warning and auto sit | ✅ | ✅ | Off until set up |
