@@ -51,8 +51,8 @@ Config mode and calibration on the microcontroller stacks are left to the
 OLED controller.
 
 !!! warning "Untested"
-    The OLED controller was built for an earlier prototype. It now uses the
-    current packet layout, but it hasn't been tested with either robot stack
+    The OLED controller's current board, rev v5, is routed and its firmware
+    builds, but no v5 board has been built or tested with either robot stack
     yet. The receiver's gamepad support builds, but hasn't been tested on
     hardware.
 
@@ -87,20 +87,26 @@ other to the same gait core version.
 
 ## OLED controller
 
-A handheld controller with two thumbsticks, a rotary encoder, four shoulder
-switches and a 128×64 OLED, built around an ESP32-S2. It runs from a single
-Li-ion cell, charged over USB-C.
+!!! note "Community design"
+    The OLED controller isn't a supported way to drive the robots: use a
+    Bluetooth gamepad through the [receiver](#receiver), or the Steam Deck on
+    ROS 2. It's published for anyone who wants a dedicated handheld.
+
+A handheld controller with two thumbsticks, four face buttons, a rotary
+encoder, four shoulder switches and a 128×64 OLED, built around an ESP32-S3.
+It runs from a single Li-ion cell, charged over USB-C, and has I²C and UART
+Qwiic ports either side of the USB socket.
 
 - **PCB:** [OLED controller](https://github.com/TH4R4V3N1324/hexapod-hardware/tree/main/controllers/oled-controller),
-  rev v3. There's also a larger alternative layout with no IMU or current
-  sensor.
+  rev v5 (not yet built or tested). The previous board, rev v3 (ESP32-S2),
+  is tagged `oled-controller-v3` in hexapod-hardware.
 - **Firmware:** `oled-controller/` in hexapod-controller, built with
   [PlatformIO](https://platformio.org/):
 
     ```bash
     git clone --recursive https://github.com/TH4R4V3N1324/hexapod-controller.git
     cd hexapod-controller/oled-controller
-    pio run -t upload
+    pio run -t upload          # rev v5; use -e v3 for the older board
     ```
 
 It walks the robot, changes gait and mode, and sets the body height with the
