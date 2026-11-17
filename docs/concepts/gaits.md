@@ -24,6 +24,14 @@ up. Fewer legs swinging at once is slower but more stable.
 See [Legs & joints](legs.md) for the leg numbers. A gait change is applied
 only at a safe point, rather than mid-step.
 
+These are the Explorer's and the Lite's gaits. In gait core, each robot lists
+its own gaits as data: how long each foot is down (the **duty factor**) and
+when in the cycle each leg lifts. So the controllers cycle through whatever
+gaits the robot has. Every gait is checked before the robot moves, so the
+feet that stay down always hold the body up; all three of these do with
+centimetres to spare. See [Describing a robot](../gait-core/robots.md#gaits)
+and [Stability & body sway](../gait-core/stability.md).
+
 ## Modes
 
 | Mode | What it does |
@@ -34,13 +42,14 @@ only at a safe point, rather than mid-step.
 
 ## Support by stack
 
-Every stack runs the same gait from [gait core](../stacks/gait-core.md), so
+Every stack runs the same gait from [gait core](../gait-core/index.md), so
 what differs is mostly down to the hardware.
 
 | | ROS 2 (Explorer) | ESP32 (Explorer) | Servo2040 (Lite) |
 |---|---|---|---|
 | Tripod, ripple, wave | ✅ | ✅ | ✅ |
 | Normal, strafe, tilt | ✅ | ✅ | ✅ |
+| Steering by tilting the controller (LB) | ✅ | Not yet: no controller sends it | Not yet: no controller sends it |
 | Leveling (IMU) | ✅ | ✅ | ✅ |
 | Ground contact | From servo load | From servo load | Not yet |
 | Load balancing, terrain adaptation | ✅ | ✅ | — (no servo feedback) |

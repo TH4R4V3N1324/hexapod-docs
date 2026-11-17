@@ -9,7 +9,7 @@ Raspberry Pi. It's the middle ground between the two other stacks:
 - like [Servo2040](servo2040.md), it's firmware on a microcontroller, driven
   by a handheld controller, with no lidar, cameras or mapping.
 
-The gait comes from [gait core](gait-core.md), so it walks the same way as
+The gait comes from [gait core](../gait-core/index.md), so it walks the same way as
 the other stacks.
 
 The code is in [hexapod-esp32](https://github.com/TH4R4V3N1324/hexapod-esp32).
@@ -185,12 +185,12 @@ pose, and stands up.
   unpowered servos can't stall the loop. A servo that answers again is held
   where it is until it gets a new target, so it never jumps.
 
-See [Servo power](gait-core.md#servo-power) in gait core.
+See [Servo power](../gait-core/index.md#servo-power) in gait core.
 
 ### Battery
 
 The firmware reads both leg hubs' INA226s and runs gait core's
-[battery behaviour](gait-core.md#battery-behaviour): below 10.5 V it prints a
+[battery behaviour](../gait-core/index.md#battery-behaviour): below 10.5 V it prints a
 warning on the serial monitor, and below 9.9 V it sits down and turns servo
 power off. A stand command overrides it. Without leg hubs, nothing happens.
 

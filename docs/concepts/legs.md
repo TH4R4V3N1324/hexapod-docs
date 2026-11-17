@@ -30,7 +30,7 @@ Looking down on the robot with the front at the top:
 - **Legs 1–3 are on the right** (front, middle, rear).
 - **Legs 4–6 are on the left** (rear, middle, front).
 
-In code, [gait core](../stacks/gait-core.md) counts the legs from 0, in the
+In code, [gait core](../gait-core/index.md) counts the legs from 0, in the
 same clockwise order: leg 0 in code is leg 1 here.
 
 In the ROS 2 stack, the joints are named `leg<N>_coxa_joint`,

@@ -41,10 +41,11 @@ robot: controller_teleop → /cmd_vel → gait_controller
 | `hexapod_interfaces` | Custom services and messages |
 | `hexapod_description` | Robot model (URDF), Gazebo worlds, RViz config |
 | `hexapod_hardware_interface` | Servo driver (`ros2_control` plugin), IMU and power monitor drivers, the `SERVO_EN` driver, hardware tests |
-| `hexapod-gait-core` | Submodule: the shared [gait core](../gait-core.md) library, built as the `gait_core` package |
+| `hexapod-gait-core` | Submodule: the shared [gait core](../../gait-core/index.md) library (legged-gait-core, pinned to v0.9.0), built as the `gait_core` package |
 | `hexapod_gait_controller` | The `gait_controller` node, which runs gait core's gait engine |
 | `hexapod_control` | `behaviour_manager`, which runs gait core's battery behaviour |
 | `hexapod_teleop` | Keyboard and gamepad control |
+| `controller_imu` | Reads a gamepad's accelerometer and gyro through SDL2 and publishes its orientation, for [controller tilt](driving.md#controller-tilt) |
 | `hexapod_bringup` | Launch files, plus SLAM, Nav2 and EKF config |
 | `operator_bringup` | Operator side: gamepad node and Foxglove bridge |
 
@@ -82,7 +83,7 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-Run `colcon build` from `hexapod_ws`: it builds [gait core](../gait-core.md)
+Run `colcon build` from `hexapod_ws`: it builds [gait core](../../gait-core/index.md)
 in double precision, using settings in `hexapod_ws/colcon.meta`, and the gait
 controller won't compile without them.
 

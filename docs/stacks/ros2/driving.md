@@ -98,8 +98,9 @@ works, including Xbox One and Series, DualShock 4, DualSense, Switch Pro and
 The gamepad layout is the same on every stack: see
 [Gamepad controls](../../controllers.md#gamepad-controls). In short: the
 sticks walk and turn, **RB [R1]** sits and stands (hold 2 s to power down),
-Start and Back change the mode and gait, the D-pad sets the body height, and
-A, B, X and Y switch the features below.
+Start and Back change the mode and gait, the D-pad sets the body height,
+**LB [L1]** steers by [tilting the controller](#controller-tilt), and A, B, X
+and Y switch the features below.
 
 The gamepad does nothing until the robot's gait controller is up and has
 reported its limits.
@@ -107,6 +108,27 @@ reported its limits.
 To check a different controller's numbering, run `ros2 topic echo /joy` and
 move each control. Axis and button numbers are parameters of
 `controller_teleop` if you need to remap them.
+
+## Controller tilt
+
+A gamepad with an accelerometer and gyro, such as a DualSense, DualShock 4 or
+Switch Pro controller, can also steer the robot by tilting it. Hold
+**LB [L1]**:
+
+- **Walking:** tilt the controller forward or back to walk, sideways to
+  strafe, and turn it to turn. Wherever it was when you pressed LB is
+  neutral.
+- **Tilt mode:** the body follows the controller's orientation instead of
+  the sticks. Release LB and the body eases back to neutral.
+
+The `controller_imu` node reads the gamepad's sensors through SDL2 and
+publishes its orientation on `/controller/imu`. It has to run on the machine
+the gamepad is connected to, so it starts with the gamepad node: on the
+operator side (Steam Deck or laptop), on the Pi for a
+[gamepad on the robot](#gamepad-on-the-robot), and in simulation. A gamepad
+without both sensors still works normally, just without controller tilt. See
+[Protocol & teleop](../../gait-core/protocol.md#controller-orientation) for how
+it works in gait core.
 
 ## Keyboard control
 

@@ -66,8 +66,13 @@ nav:
           - Troubleshooting: stacks/ros2/troubleshooting.md
       - ESP32: stacks/esp32.md
       - Servo2040: stacks/servo2040.md
-      - Gait core: stacks/gait-core.md
       - Training: stacks/training.md
+  - Gait core:
+      - gait-core/index.md
+      - Describing a robot: gait-core/robots.md
+      - Stability & body sway: gait-core/stability.md
+      - Beyond the hexapod: gait-core/other-robots.md
+      - Protocol & teleop: gait-core/protocol.md
   - Controllers: controllers.md
 
 extra:
@@ -79,8 +84,8 @@ extra:
       link: https://github.com/TH4R4V3N1324/hexapod-ros2
       name: hexapod-ros2 (ROS 2 stack)
     - icon: fontawesome/brands/github
-      link: https://github.com/TH4R4V3N1324/hexapod-gait-core
-      name: hexapod-gait-core (shared gait library)
+      link: https://github.com/TH4R4V3N1324/legged-gait-core
+      name: legged-gait-core (shared gait library)
     - icon: fontawesome/brands/github
       link: https://github.com/TH4R4V3N1324/hexapod-esp32
       name: hexapod-esp32 (ESP32 firmware)

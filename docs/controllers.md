@@ -16,7 +16,7 @@ and the controller PCBs are in
 ## Gamepad controls
 
 A gamepad drives **every stack the same way**: the layout is code in
-[gait core](stacks/gait-core.md#teleop), run by ROS 2's `controller_teleop`
+[gait core](gait-core/protocol.md#teleop), run by ROS 2's `controller_teleop`
 and by the receiver. Buttons are named Xbox-first, with PlayStation in
 brackets, and go by position, so a Switch or 8BitDo gamepad uses the same
 places. The Steam Deck follows the Xbox layout.
@@ -29,6 +29,7 @@ places. The Steam Deck follows the Xbox layout.
 | LT / RT [L2 / R2] | — | Yaw left / right |
 | D-pad up / down | Body height up / down 1 cm (repeats while held) | Raise / lower the body |
 | RB [R1] | Sit down / stand up. Hold 2 s to power down | The same |
+| LB [L1] | Hold to walk by tilting the controller | Hold for the body to follow the controller's orientation |
 | Start [Options] | Next mode: normal, strafe, tilt | The same |
 | Back [Create] | Next gait: tripod, ripple, wave | The same |
 | A [Cross] | Terrain adaptation on/off | The same |
@@ -46,6 +47,12 @@ places. The Steam Deck follows the Xbox layout.
   a change made somewhere else. The Servo2040 stack has no servo feedback,
   so it refuses to turn on terrain adaptation and load balancing.
 - **Full stick** is the robot's top speed for the current gait.
+- **LB** only works with a gamepad that has motion sensors, such as a
+  DualSense, DualShock 4 or Switch Pro controller, and for now only on
+  [ROS 2](stacks/ros2/driving.md#controller-tilt). The microcontroller robots
+  understand it, but the receiver doesn't read gamepad motion sensors yet.
+  See [Protocol & teleop](gait-core/protocol.md#controller-orientation).
+- **Back** cycles through the robot's own gaits, however many it has.
 
 Config mode and calibration on the microcontroller stacks are left to the
 OLED controller.
@@ -72,10 +79,11 @@ on. The receiver turns a gamepad into the same packets, so the robot can't
 tell the difference.
 
 The packets are defined once, in gait core's
-[protocol](stacks/gait-core.md#protocol), which every controller and robot
-includes. Each packet starts with a protocol version, and each end drops
-packets of another version or size. So when you update one end, update the
-other to the same gait core version.
+[protocol](gait-core/protocol.md), which every controller and robot
+includes. Each packet starts with a protocol version (currently 4), and each
+end drops packets of another version or size. So when you update one end,
+update the other to the same gait core version. The ESP32 and Servo2040
+firmware and the controller firmware are all on gait core v0.9.0.
 
 - **One input at a time.** Whichever of the OLED controller and the gamepad
   is driving keeps control while it's connected. The other only takes over
@@ -128,7 +136,8 @@ Pro controllers.
   robot's ESP32 over ESP-NOW.
 
 The firmware is `receiver/` in hexapod-controller, built with
-[ESP-IDF](https://docs.espressif.com/projects/esp-idf/) **5.3**:
+[ESP-IDF](https://docs.espressif.com/projects/esp-idf/) **5.5** or later
+(the build is locked to 5.5.1), with Bluepad32 5.0:
 
 ```bash
 cd hexapod-controller/receiver

@@ -3,7 +3,7 @@
 The Servo2040 stack runs the [Lite](../variants/lite/index.md) on a Pimoroni
 [Servo 2040](https://shop.pimoroni.com/products/servo-2040), an RP2040 board
 with 18 servo outputs. It drives **18 hobby PWM servos** with the same gait
-as the ROS 2 stack, because both are built on [gait core](gait-core.md).
+as the ROS 2 stack, because both are built on [gait core](../gait-core/index.md).
 
 The code is in [hexapod-servo2040](https://github.com/TH4R4V3N1324/hexapod-servo2040).
 
@@ -50,7 +50,7 @@ or how hard they're pushing. So the Servo2040 stack runs **open loop**:
   them yet.
 - There's no mapping or navigation.
 - There's **no servo power switch**. When gait core's
-  [servo power](gait-core.md#servo-power) turns off, the firmware stops the
+  [servo power](../gait-core/index.md#servo-power) turns off, the firmware stops the
   PWM signals and the servos go limp. A stand command starts them again and
   seats the legs, as at boot, before standing. Since the servos never report
   anything, the check for lost servos is off.
@@ -131,7 +131,7 @@ stops the servos. A stand command starts them again.
 ## Battery
 
 The firmware can feed the Servo 2040's servo supply voltage and current to
-gait core's [battery behaviour](gait-core.md#battery-behaviour), which warns
+gait core's [battery behaviour](../gait-core/index.md#battery-behaviour), which warns
 when it's low and sits down and stops the servos when it's critical.
 
 It's **off by default** (`robot::BATTERY_MONITORING`): gait core's thresholds

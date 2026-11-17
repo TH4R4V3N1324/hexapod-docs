@@ -74,7 +74,7 @@ It:
 
 1. pulls the latest code, **fast-forward only**: if the Pi has changes of
    its own that the pull would merge or overwrite, it stops and says so;
-2. updates the submodules, including [gait core](../gait-core.md);
+2. updates the submodules, including [gait core](../../gait-core/index.md);
 3. rebuilds the Docker image with the newest ROS base image, while the robot
    keeps running;
 4. restarts the container on the new image.
@@ -224,7 +224,7 @@ It ignores movement commands until it's standing.
 
 If the servos stop answering, for example because the E-stop was pressed,
 the robot turns servo power off. **Releasing the E-stop doesn't move it:**
-stand it up again. See [Servo power](../gait-core.md#servo-power).
+stand it up again. See [Servo power](../../gait-core/index.md#servo-power).
 
 Servos that don't answer are logged and retried, one at a time, so they
 can't stall the control loop. The IMU and power monitor drivers keep retrying
@@ -234,7 +234,7 @@ restart.
 ### Battery
 
 The `behaviour_manager` node watches both leg hubs' power monitors using gait
-core's [battery behaviour](../gait-core.md#battery-behaviour). When the
+core's [battery behaviour](../../gait-core/index.md#battery-behaviour). When the
 battery is low it rumbles the gamepad; when it's critical it sits the robot
 down and turns servo power off. Its settings are in
 `hexapod_bringup/config/behaviour_manager.yaml`.

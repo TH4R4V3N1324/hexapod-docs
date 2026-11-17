@@ -27,7 +27,7 @@ and levels itself, but can't feel the ground or map. The
 | [Training](../stacks/training.md) | A PC with Isaac Lab | Simulation (experimental) |
 
 All three robot stacks walk with the same gait, from the shared
-[gait core](../stacks/gait-core.md) library.
+[gait core](../gait-core/index.md) library.
 
 ## Which should I build?
 

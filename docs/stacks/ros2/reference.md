@@ -12,6 +12,8 @@
 | `/cmd_vel` | `geometry_msgs/Twist` | `keyboard_teleop`, `controller_teleop`, Nav2 | `gait_controller` |
 | `/body_pose` | `geometry_msgs/Pose` | `controller_teleop` | `gait_controller` (tilt mode) |
 | `/joy` | `sensor_msgs/Joy` | `game_controller_node` (operator, or the robot's own for a gamepad on the Pi) | `controller_teleop` |
+| `/controller/imu` | `sensor_msgs/Imu` | `controller_imu`, on the machine the gamepad is connected to | `controller_teleop`, `gait_controller` |
+| `/controller/tilt_active` | `std_msgs/Bool` | `controller_teleop` (LB held with a controller IMU) | `gait_controller` |
 | `/joint_states` | `sensor_msgs/JointState` | `joint_state_broadcaster` | `gait_controller`, `robot_state_publisher` |
 | `/joint_commands` | `sensor_msgs/JointState` | `gait_controller` | `joint_state_relay` |
 | `/hexapod_joint_controller/commands` | `std_msgs/Float64MultiArray` | `joint_state_relay` | `hexapod_joint_controller` |
