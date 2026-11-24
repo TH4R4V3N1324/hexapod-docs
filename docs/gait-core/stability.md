@@ -8,7 +8,9 @@ sways the body over its feet for gaits that need it.
 
 All of this is **static** stability: whether the robot would stay up if it
 froze at that moment. It's judged in the body frame from the commanded foot
-positions, so it needs no IMU and works the same on every stack.
+positions, so it needs no IMU and works the same on every stack. For
+momentum, pushes and gaits that balance by moving, see
+[Dynamic balance](dynamics.md).
 
 ## The support polygon
 
@@ -102,6 +104,9 @@ A gait that sways walks like this:
 4. **When the robot stops**, the sway eases back to centre with every foot
    down.
 
+Switching to a gait that doesn't sway eases any sway left behind back to
+centre at `sway_speed`, rather than keeping it (fixed in v0.11.1).
+
 The phase waits for as long as the sway is still getting there. If it
 arrives and still isn't stable, or after 5 seconds regardless, the engine
 lifts the next leg anyway and warns how far short it was:
@@ -129,14 +134,18 @@ All are in `GaitParams`. The ones marked live can be changed while running.
 | `sway_speed` | 0.05 m/s | Fastest the body sways. Live |
 | `sway_margin` | 0.02 m | How far inside the feet swaying aims for, at least `min_stability_margin`. Live |
 
-The margins and sway are judged from the robot's `centreOfMass`, so set it
-if the robot's weight isn't over its body origin.
+The margins and sway are judged from the robot's
+[centre of mass](robots.md#centre-of-mass). Set it, or better, give the
+robot's masses, if its weight isn't over its body origin. With masses, it's
+the live centre of mass, which moves as the legs do.
 
 ## Limits
 
 - **Static only.** Nothing here models momentum, so a trot, a fast walk or a
   push can still tip a robot whose margin looks fine, and a dynamic gait that
-  relies on momentum is refused unless `allow_unstable_gaits` is set.
+  relies on momentum is refused unless `allow_unstable_gaits` is set. The
+  optional [dynamic balance](dynamics.md) features cover momentum, but they
+  don't change which gaits are refused.
 - **Flat ground.** The polygon is judged in the body frame, from where the
   feet are commanded, not where they landed, and doesn't account for slopes.
   The IMU-based [leveling](../stacks/ros2/walking.md) keeps the body level on

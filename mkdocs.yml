@@ -71,6 +71,7 @@ nav:
       - gait-core/index.md
       - Describing a robot: gait-core/robots.md
       - Stability & body sway: gait-core/stability.md
+      - Dynamic balance: gait-core/dynamics.md
       - Beyond the hexapod: gait-core/other-robots.md
       - Protocol & teleop: gait-core/protocol.md
   - Controllers: controllers.md

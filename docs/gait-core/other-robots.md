@@ -56,7 +56,9 @@ each leg lifts. The lift order puts each lift next to the last one's side,
 so the body sways a short way each time.
 
 A **trot** (two diagonal pairs) is refused unless `allow_unstable_gaits` is
-set: two feet can't hold the body up, and no sway helps.
+set: two feet can't hold the body up, and no sway helps. A trot balances by
+its motion and where it steps, which is what the optional
+[dynamic balance](dynamics.md#foot-placement) features are for.
 
 ## Four joints per leg
 

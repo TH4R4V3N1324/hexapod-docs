@@ -32,13 +32,37 @@ data, and the engine walks whatever it's given:
 - **The core has no built-in robot.** The Explorer is one definition, in a
   separate `gait_core::robots` library.
 
-The Explorer's numbers are unchanged, and ROS 2's recorded "golden trace" of
-its joint commands still matches, so it walks exactly as before.
+In v0.9.0 the Explorer's numbers were unchanged, and ROS 2's recorded
+"golden trace" of its joint commands still matched.
+
+## Since v0.9.0
+
+Releases v0.10.0 to v0.13.0 add to the API rather than change it, and the
+protocol is still version 4. They do change how the Explorer walks:
+
+- **Per-joint speed limits** (v0.10.0): each joint can have its own top
+  speed. The Explorer's are its servos' real speeds on a 3S pack: 4.36 rad/s
+  for the coxa and tibia, 7.28 rad/s for the femur, instead of 4 rad/s for
+  every joint.
+- **A faster walk** (v0.11.0): the Explorer's stride grows from 0.06 m to
+  0.07 m, and the shortest phase from 0.7 s to 0.55 s, so each gait's top
+  speed rises, as far as the joint speed limits allow.
+- **Masses** (v0.12.0): a robot can give its body's and links' masses, and
+  the engine keeps a live centre of mass as the legs move. The Explorer
+  gives its CAD masses, 3.32 kg in all.
+- **Richer IMU input** (v0.12.0): `ImuSample` carries angular velocity and
+  linear acceleration as well as orientation.
+- **Dynamic balance** (v0.12.0, v0.13.0): optional, off by default.
+  Acceleration and leg lifts limited by the ZMP and capture point, feedback
+  that recovers from shoves, preview-planned body sway, feedforward joint
+  torques, capture-point foot placement, and an input for the body's
+  velocity from an outside estimator. See [Dynamic balance](dynamics.md).
 
 | Page | What it covers |
 |---|---|
 | [Describing a robot](robots.md) | `RobotDefinition`: legs, joints, solvers, stance, gaits and centre of mass, with the Explorer as the example |
 | [Stability & body sway](stability.md) | How the engine judges whether a gait will tip the robot over, and how it sways the body to fix it |
+| [Dynamic balance](dynamics.md) | Optional: momentum, pushes and gaits that balance by moving. Capture point, ZMP, preview control, joint torques and foot placement |
 | [Beyond the hexapod](other-robots.md) | A quadruped, four-joint legs and two-joint legs: what works, what doesn't, and why |
 | [Protocol & teleop](protocol.md) | The controller packets (protocol v4) and the shared gamepad layout |
 
@@ -54,7 +78,10 @@ its joint commands still matches, so it walks exactly as before.
 A change in gait core reaches every stack once it's updated to that release,
 so the robots walk, react and handle a gamepad the same way. Every stack is
 on v0.9.0, each passing the engine `gait_core::explorer::robot()` (or the
-Lite's version of it, with narrower joint limits).
+Lite's version of it, with narrower joint limits). None is on v0.13.0 yet,
+so the [changes since v0.9.0](#since-v090) haven't reached the robots, and
+the stack pages, such as [How it walks](../stacks/ros2/walking.md), still
+describe v0.9.0.
 
 ## What's in it
 
@@ -63,10 +90,10 @@ area, and one namespace, `gait_core`.
 
 | Folder | CMake target | What |
 |---|---|---|
-| `robot/` | `gait_core::gait_core` | What a robot is: legs, joint chains, stance and gaits. Data only |
-| `kinematics/` | `gait_core::gait_core` | Solving one leg: the `LegKinematics` interface, an exact analytic solver and a numerical one for any chain |
-| `locomotion/` | `gait_core::gait_core` | Making the robot walk: the gait engine, gait timing, trajectories, frames and the support polygon |
-| `estimation/` | `gait_core::gait_core` | Leg odometry: body motion and climb from the planted feet |
+| `robot/` | `gait_core::gait_core` | What a robot is: legs, joint chains, stance, gaits and masses. Data only |
+| `kinematics/` | `gait_core::gait_core` | Solving one leg: the `LegKinematics` interface, an exact analytic solver and a numerical one for any chain, and a leg's mass properties |
+| `locomotion/` | `gait_core::gait_core` | Making the robot walk: the gait engine, gait timing, trajectories, frames, the support polygon, and the balance and preview controllers |
+| `estimation/` | `gait_core::gait_core` | Leg odometry (body motion and climb from the planted feet), and the body's velocity from leg odometry and the IMU |
 | `behaviour/` | `gait_core::behaviour` | Decisions from sensors, such as the [battery monitor](#battery-behaviour) |
 | `robots/` | `gait_core::robots` | Real robots' definitions. Only the Explorer so far |
 | `protocol/` | `gait_core::protocol` | Controller ↔ robot packets. Header-only, no dependencies |
@@ -79,7 +106,8 @@ nothing at all, not even Eigen, so controller firmware can use them too.
 ### The gait engine
 
 `GaitEngine` is the whole gait: startup, walking, sitting and standing, tilt
-mode, leveling, load balancing, terrain adaptation and leg odometry. See
+mode, leveling, load balancing, terrain adaptation, leg odometry and, if
+turned on, [dynamic balance](dynamics.md). See
 [How it walks](../stacks/ros2/walking.md) for what each feature does. A
 stack builds one from its settings and its robot, feeds it what it measures,
 and calls `update` at a steady rate:
@@ -94,7 +122,8 @@ gait_core::GaitEngine engine(params, gait_core::explorer::robot());
 
 // Whenever they arrive
 engine.onJointStates(feedback);          // every leg's joint angles (and efforts, if any)
-engine.setImu(imu);                      // optional: leveling
+engine.setImu(imu);                      // optional: orientation for leveling; rates and
+                                         // acceleration for balance feedback
 engine.setVelocity({vx, vy, wz});        // m/s and rad/s, body frame
 
 // Every tick, e.g. at 100 Hz
@@ -103,12 +132,14 @@ setServoEnable(out.servoPower);
 if (out.commanded) {
     for (int leg = 0; leg < engine.numLegs(); ++leg) {
         writeJoints(leg, out.joints[leg]);   // body to foot, rad
+        // With torque_output on, out.torques[leg] is a feedforward torque per joint (N m)
     }
 }
 ```
 
-Sensors are optional. A stack that never gives joint efforts, an IMU or a
-controller orientation just doesn't get the features that need them. Commands
+Sensors are optional. A stack that never gives joint efforts, foot contact,
+an IMU, a body velocity (`setBodyVelocity`) or a controller orientation just
+doesn't get the features that need them. Commands
 (`setGait`, `setMode`, `setHeight`, `sit`, `powerDown`) return whether they
 were accepted, with a message saying why not. Logging, a callback when the
 robot sits or stands, and a foothold planner (ROS 2's height map) are
@@ -178,6 +209,12 @@ API changes, and the patch version for fixes that keep the API.
 
 | Release | What changed |
 |---|---|
+| v0.13.0 | Capture-point [foot placement](dynamics.md#foot-placement) for gaits that balance by stepping, and `setBodyVelocity` for a velocity from an outside estimator |
+| v0.12.0 | [Dynamic balance](dynamics.md): robot masses and a live centre of mass, `BalanceController` (capture point and ZMP), balance feedback with `BodyVelocityEstimator`, preview control, joint torque output and foot contact sensors. `ImuSample` gains angular velocity and linear acceleration. The Explorer gets its CAD masses |
+| v0.11.1 | A gait that doesn't sway eases off any sway left behind |
+| v0.11.0 | Landing targets slow with the gait so they don't break the joint speed limits. The Explorer's stride grows to 0.07 m, and `min_phase_duration` drops to 0.55 s |
+| v0.10.1 | Explorer joint speed limit tidy-up |
+| v0.10.0 | Per-joint speed limits (`JointDefinition::max_velocity`), set on the Explorer to its servos' speeds |
 | v0.9.0 | **Any legged robot**: `RobotDefinition` with a runtime leg count, legs as joint chains, gaits as duty factor and offsets, the support polygon and body sway. The Explorer moves to `gait_core::robots`. One include root, `gait_core/`, with the behaviour and teleop namespaces renamed to `gait_core::behaviour` and `gait_core::teleop`. Protocol version 4 |
 | v0.8.0 | Driving by tilting the controller: hold LB to walk with the controller's pitch, roll and yaw |
 | v0.7.0 | Controller orientation: in tilt mode, the body follows the controller while LB is held. Protocol version 3 |
@@ -187,6 +224,16 @@ API changes, and the patch version for fixes that keep the API.
 | v0.3.0 | No heap allocation while running; legs indexed from 0 |
 | v0.2.0 | `GaitEngine`: the whole gait, moved out of ROS 2's `hexapod_gait_controller` |
 | v0.1.0 | The ROS-free gait maths, split out of the ROS 2 stack |
+
+!!! note "Upgrading from v0.9.0 to v0.13.0"
+    No code changes are needed: the new fields and settings all have
+    defaults, and the protocol is still version 4, so a controller on
+    v0.9.0 still drives a robot on v0.13.0. What does change is how the
+    Explorer walks: its joint speed limits, longer stride and shorter
+    shortest phase make it faster, and its stability margins are judged
+    from its live centre of mass. Check that the robot still walks well
+    before relying on it, and pass the IMU's rates and acceleration in
+    `ImuSample` if you'll use balance feedback.
 
 !!! warning "Upgrading to v0.9.0"
     Code that uses gait core directly needs changing:
@@ -215,9 +262,10 @@ git submodule update --init --recursive
 
 The library has its own test suite: kinematics on both solvers, foot
 directions and forces, gait schedules, the support polygon, leg clearance,
-odometry, the packets, the gamepad layout, a check that nothing allocates, and
-[three other robots](other-robots.md) run through everything the Explorer
-does.
+odometry, mass properties, the balance and preview controllers, the body
+velocity estimator, the packets, the gamepad layout, a check that nothing
+allocates, and [three other robots](other-robots.md) run through everything
+the Explorer does.
 
 ```bash
 git clone --recursive https://github.com/TH4R4V3N1324/legged-gait-core.git

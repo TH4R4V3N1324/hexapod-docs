@@ -16,7 +16,7 @@ RobotDefinition
 │   └── stanceOffset         this leg's foot relative to the shared stance
 ├── standReach, standHeight  the neutral stance
 ├── maxStride                how far a foot moves from neutral
-├── centreOfMass             where the weight acts
+├── centreOfMass, bodyMass   where the weight is
 └── numGaits, gaits[]        GaitPattern per gait
 ```
 
@@ -56,14 +56,18 @@ joints, listed body to foot. Each `JointDefinition` has:
 | `origin` | Where the joint is, from the previous joint (or the leg frame's origin, for the first), with every joint at zero (m) |
 | `axis` | The axis it turns about, in the leg frame with every joint at zero |
 | `lower`, `upper` | Its limits (rad) |
+| `max_velocity` | The fastest its actuator may turn (rad/s). Unset, `GaitParams::max_joint_speed` applies. From v0.10.0 |
+| `mass`, `centreOfMass` | The link this joint turns: its mass (kg) and centre of mass, in this joint's frame, as a URDF link's `<inertial>` gives them. Zero mass leaves it out. From v0.12.0 |
 
 `foot` is the offset from the last joint to the foot, again with every joint
 at zero. The Explorer's leg is a coxa, then a femur and a tibia:
 
 ```cpp
-const JointDefinition coxa  = revolute(v(0,     0, 0), v(0, 0, 1), -1.4,  1.4);
-const JointDefinition femur = revolute(v(0.063, 0, 0), v(0, 1, 0), -1.6,  1.4);   // + lowers the foot
-const JointDefinition tibia = revolute(v(0.100, 0, 0), v(0, 1, 0), -0.78, 2.63);  // + folds the knee
+constexpr Scalar ST3215_SPEED  = 4.36;   // rad/s, coxa and tibia
+constexpr Scalar STS3250_SPEED = 7.28;   // rad/s, femur
+const JointDefinition coxa  = revolute(v(0,     0, 0), v(0, 0, 1), -1.4,  1.4,  ST3215_SPEED);
+const JointDefinition femur = revolute(v(0.063, 0, 0), v(0, 1, 0), -1.6,  1.4,  STS3250_SPEED);  // + lowers the foot
+const JointDefinition tibia = revolute(v(0.100, 0, 0), v(0, 1, 0), -0.78, 2.63, ST3215_SPEED);   // + folds the knee
 const Vec3 foot = v(0.186, 0, 0);
 ```
 
@@ -71,7 +75,14 @@ So with every joint at zero the leg sticks straight out: the femur joint
 0.063 m from the coxa, the tibia joint 0.100 m further, and the foot 0.186 m
 beyond that. The femur and tibia limits match the URDF in hexapod-ros2.
 
-The limits matter: a foot target that would need a joint outside them is
+The speed limits are each servo's no-load top speed on a 3S pack
+(11.1 V). The URDF's figures, 4.7 and 7.9 rad/s, are for 12 V, which the
+battery can't reach. The gait slows down so no joint goes faster than its
+own limit, and if one still would, that joint is held to it and the foot
+lags its target for that tick. Before v0.10.0, one limit,
+`max_joint_speed` (4 rad/s), applied to every joint.
+
+The angle limits matter too: a foot target that would need a joint outside them is
 treated as out of reach, and the engine refuses or cuts short a move (a body
 tilt, a sit, a height change) that would need one. A stack whose servos
 can't reach the full range narrows them; the Servo2040 stack does this for
@@ -124,7 +135,7 @@ back, sets it per leg. The offset is kept through height and reach changes,
 sitting included.
 
 `maxStride` is how far a foot moves from its neutral position while walking:
-0.06 m on the Explorer. With the shortest phase allowed
+0.07 m on the Explorer (0.06 m before v0.11.0). With the shortest phase allowed
 (`GaitParams::min_phase_duration`), it sets each gait's top speed.
 
 ## Gaits
@@ -189,11 +200,32 @@ in whole phases, can't be run.
 
 ## Centre of mass
 
-`centreOfMass` is where the robot's weight acts, in the body frame. The
-engine keeps it over the planted feet: see
-[Stability & body sway](stability.md). It defaults to the body's origin,
-which is a fair guess for a symmetric robot like the Explorer. A robot with a
-heavy battery or payload off-centre should set it.
+The engine keeps the robot's centre of mass over its planted feet: see
+[Stability & body sway](stability.md) and [Dynamic balance](dynamics.md).
+There are two ways to describe it.
+
+**Without masses** (`bodyMass` is 0, the default), `centreOfMass` is the
+whole robot's, in the body frame, and fixed. It defaults to the body's
+origin, a fair guess for a symmetric robot. A robot with a heavy battery or
+payload off-centre should set it.
+
+**With masses** (from v0.12.0), `bodyMass` is the body's mass without its
+legs, `centreOfMass` is the body's own, and each joint's `mass` and
+`centreOfMass` describe the link it turns. The engine adds up the links
+where the joints put them, every tick, so the centre of mass moves as the
+legs swing. `centreOfMass()` on the engine gives the live value. The masses
+are also what [joint torques](dynamics.md#joint-torques) need.
+
+The Explorer gives its masses, from the CAD, as `hexapod.inertials.xacro` in
+hexapod-ros2 has them: 3.32 kg in all, two thirds of it in the legs. The
+printed parts are taken at 60% of solid until they're weighed.
+
+| Part | Mass | Centre of mass (m) |
+|---|---|---|
+| Body, without legs | 1.108 kg | (−0.0043, 0.0001, 0.0099), body frame |
+| Coxa link, each | 0.093 kg | (0.020, 0, −0.0007), coxa joint frame |
+| Femur link, each | 0.172 kg | (0.050, 0, 0), femur joint frame |
+| Tibia link, each | 0.103 kg | (0.078, 0, 0.0128), tibia joint frame |
 
 ## What the engine checks
 
@@ -229,23 +261,30 @@ not reported. Mark legs whose servos aren't answering as not `present`,
 rather than repeating stale angles, so the engine can tell the servos have
 gone.
 
+A robot with **foot contact sensors** sets `hasContact` and fills
+`contact` per leg (from v0.12.0). The engine then uses them instead of the
+contact it works out from joint efforts, everywhere it needs to know which
+feet are down. The Explorer has none.
+
 ## A new robot, step by step
 
 1. **Measure each leg** with every joint at zero: where each joint is from
-   the last, which way it turns, and its limits. A URDF has all of this.
+   the last, which way it turns, its limits and its top speed. A URDF has
+   all of this, and each link's mass too.
 2. **Write the definition**, as a function returning a `RobotDefinition`.
    Start from `explorer.cpp`.
 3. **Pick a solver** per leg: `YawPitchPitch` if the leg is a coxa, femur and
    tibia in a line, otherwise `Chain`.
-4. **Set the stance and stride** so every foot can reach its whole stride at
+4. **Give the masses**, if you know them, or at least set `centreOfMass`.
+5. **Set the stance and stride** so every foot can reach its whole stride at
    every body height you'll use.
-5. **List the gaits**, with `fromGroups`, so that the feet that stay down
+6. **List the gaits**, with `fromGroups`, so that the feet that stay down
    always surround the centre of mass.
-6. **Run it in the test harness.** gait core's tests drive a robot through
+7. **Run it in the test harness.** gait core's tests drive a robot through
    stand, walk, turn, stop, tilt, sit and power down with perfect simulated
    servos, checking every command against its joints' limits
    (`test/test_robots.hpp`). Add yours there and watch for warnings.
-7. **Check `robotSupported()`** and the log on the real robot before it
+8. **Check `robotSupported()`** and the log on the real robot before it
    stands.
 
 See [Beyond the hexapod](other-robots.md) for three robots built this way.
